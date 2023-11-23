@@ -10,13 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	pwd(char **envp)
-{
-	int	cursor;
+#include "minishell.h"
 
+char	*ft_strdup(const char *s)
+{
+	char	*result;
+	int		len;
+	int		cursor;
+
+	len = ft_strlen(s);
+	result = malloc(len + 1);
 	cursor = 0;
-	while (*(envp + cursor) && ft_strncmp(*(envp + cursor), "PWD", 3))
+	if (!result)
+		return (NULL);
+	while (cursor < len)
+	{
+		*(result + cursor) = *(s + cursor);
 		cursor++;
-	write(1, *(envp + cursor) + 4, ft_strlen(*(envp + cursor) + 4));
-	return (0);
+	}
+	*(result + cursor) = '\0';
+	return (result);
 }

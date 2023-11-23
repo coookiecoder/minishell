@@ -1,6 +1,9 @@
 NAME=minishell
 
-FILES=main
+FILES=main \
+	builtins/pwd \
+	utils/strlen utils/strdup utils/strncmp \
+	core/environment
 
 SRC=$(foreach f, $(FILES), src/$(f).c)
 OBJ=$(foreach f, $(FILES), obj/$(f).o)
