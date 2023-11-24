@@ -11,27 +11,33 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
+
+void	init_command(t_command *command)
+{
+	int	cursor;
+
+	cursor = 0;
+	command->argv = NULL;
+	command->argc = 0;
+	while (cursor < PATH_MAX)
+		*(command->bin + cursor++) = '\0';
+}
 
 int	main(int argc, char **argv, const char **envp)
 {
-	char	*buffer;
-	t_shell	shell;
+	char		*buffer;
+	t_shell		shell;
+	t_command	command;
 
 	(void) argc;
 	(void) argv;
 	load_env(&shell, envp);
+	init_command(&command);
 	while (1)
 	{
 		buffer = readline("hello there UwU : ");
-		if (!buffer || !ft_strncmp(buffer, "exit", 5))
-			break ;
-		if (!ft_strncmp(buffer, "pwd ", 4) || !ft_strncmp(buffer, "pwd", 4))
-			pwd(shell.env);
+		format_command(buffer, &command);
+		make_command(command, &shell);
 		free(buffer);
 	}
-	if (buffer)
-		free(buffer);
-	unload_env(&shell);
-	return (0);
 }

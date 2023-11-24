@@ -15,16 +15,25 @@
 
 # include <stdlib.h>
 # include <unistd.h>
-
+# include <errno.h>
+# include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
-struct s_shell {
+typedef struct s_shell {
 	char	**env;
 	char	*prompt;
-};
+}	t_shell;
 
-typedef struct s_shell	t_shell;
+typedef struct s_command {
+	char		bin[PATH_MAX];
+	int			argc;
+	char		**argv;
+}	t_command;
+
+// builtin/cd.c
+
+int		cd(int argc, char **argv, t_shell *shell);
 
 // builtin/pwd.c
 
@@ -37,6 +46,14 @@ void	set_env(t_shell *sh, const char *name, const char *value);
 void	unset_env(t_shell *sh, const char *name);
 char	*get_env(t_shell *sh, const char *name);
 void	unload_env(t_shell *sh);
+
+// core/format_command.c
+
+void	format_command(char *buffer, t_command *command);
+
+// core/make_command.c
+
+int		make_command(t_command command, t_shell *shell);
 
 // utlis/strncmp.c
 

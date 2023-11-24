@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                                            */
+/*   NOOT NOOT MOTHER FUCKER                      :#:  :#:         :#:  :#:   */
+/*                                                :#:  :#::#     #::#:  :#:   */
+/*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
+/*                                                :##::##: :#:#:#: :##::##:   */
+/*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
+/*   Updated: the-day-it-was updated by UwU                                   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	load_env(t_shell *sh, const char **envp)
 {
-	int len;
-	int cursor;
+	int	len;
+	int	cursor;
 
 	len = 0;
 	while (*(envp + len))
@@ -18,6 +30,7 @@ int	load_env(t_shell *sh, const char **envp)
 		cursor++;
 	}
 	*(sh->env + cursor) = NULL;
+	cursor = 0;
 	return (1);
 }
 
