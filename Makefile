@@ -1,7 +1,7 @@
 NAME=minishell
 
 FILES=main \
-	builtins/pwd builtins/cd \
+	builtins/pwd builtins/cd builtins/echo \
 	utils/strlen utils/strdup utils/strncmp \
 	core/environment core/format_command core/make_command
 

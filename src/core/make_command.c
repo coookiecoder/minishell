@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <bits/types/error_t.h>
 #include <iso646.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -23,15 +24,19 @@ int	builtin(t_command command)
 		return (1);
 	else if (!strncmp(command.bin, "cd", 3))
 		return (1);
+	else if (!strncmp(command.bin, "echo", 5))
+		return (1);
 	return (0);
 }
 
 int	do_builtin(t_command command, t_shell *shell)
 {
-	if (!strncmp(command.bin, "pwd", 3))
+	if (!strncmp(command.bin, "pwd", 4))
 		return (pwd());
-	else if (!strncmp(command.bin, "cd", 2))
+	else if (!strncmp(command.bin, "cd", 3))
 		return (cd(command.argc, command.argv, shell));
+	else if (!strncmp(command.bin, "echo", 5))
+		return (echo(command.argc, command.argv));
 	return (0);
 }
 

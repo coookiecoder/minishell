@@ -39,6 +39,10 @@ int		cd(int argc, char **argv, t_shell *shell);
 
 int		pwd(void);
 
+// builtin/echo.c
+
+int		echo(int argc, char **argv);
+
 // core/environment.c
 
 int		load_env(t_shell *sh, const char **envp);
