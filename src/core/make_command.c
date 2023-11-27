@@ -19,9 +19,9 @@
 
 int	builtin(t_command command)
 {
-	if (!strncmp(command.bin, "pwd", 3))
+	if (!strncmp(command.bin, "pwd", 4))
 		return (1);
-	if (!strncmp(command.bin, "cd", 2))
+	else if (!strncmp(command.bin, "cd", 3))
 		return (1);
 	return (0);
 }
@@ -29,22 +29,22 @@ int	builtin(t_command command)
 int	do_builtin(t_command command, t_shell *shell)
 {
 	if (!strncmp(command.bin, "pwd", 3))
-		return (pwd(shell->env));
-	if (!strncmp(command.bin, "cd", 2))
+		return (pwd());
+	else if (!strncmp(command.bin, "cd", 2))
 		return (cd(command.argc, command.argv, shell));
 	return (0);
 }
 
 int	try_bin(char *path_to_bin, t_command command, t_shell *shell)
 {
-	int last_section;
+	int	last_section;
 	int	cursor;
 	int	cursor_bin;
 
 	last_section = 5;
 	cursor = 0;
 	cursor_bin = 0;
-	while(*(path_to_bin + cursor))
+	while (*(path_to_bin + cursor))
 		if (*(path_to_bin + cursor++) == ':')
 			last_section = cursor;
 	*(path_to_bin + cursor++) = '/';
@@ -57,7 +57,7 @@ void	try_path(t_command command, t_shell *shell)
 {
 	char	buffer[PATH_MAX];
 	char	*path;
-	int 	cursor;
+	int		cursor;
 
 	cursor = 0;
 	while (ft_strncmp(*(shell->env + cursor), "PATH=", 5))
@@ -68,7 +68,7 @@ void	try_path(t_command command, t_shell *shell)
 	{
 		if (*(path + cursor) == ':')
 			if (try_bin(buffer, command, shell) == 0)
-				break;
+				break ;
 		*(buffer + cursor) = *(path + cursor);
 		cursor++;
 	}

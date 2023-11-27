@@ -33,7 +33,7 @@ int	find_argv_number(char *buffer, int *argv_cursor)
 	space = 1;
 	result = 0;
 	cursor = 0;
-	*argv_cursor = 0;
+	*argv_cursor = 1;
 	while (*(buffer + cursor))
 	{
 		if (*(buffer + cursor) != ' ' && space && *(buffer + cursor))
@@ -89,6 +89,7 @@ void	format_command(char *buffer, t_command *command)
 		*(command->bin + cursor) = *(buffer + cursor);
 		cursor++;
 	}
+	*(command->bin + cursor) = '\0';
 	while (*(buffer + cursor) == ' ' && *(buffer + cursor))
 		cursor++;
 	if (command->argv)
@@ -102,5 +103,5 @@ void	format_command(char *buffer, t_command *command)
 		*(command->argv + argv_cursor) = malloc(arg_len(buffer + cursor) + 1);
 		putargv(*(command->argv + argv_cursor++), buffer + cursor, &cursor);
 	}
-	*(command->argv + argv_cursor) = NULL;
+	*(command->argv) = NULL;
 }

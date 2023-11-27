@@ -12,14 +12,12 @@
 
 #include "minishell.h"
 
-int	pwd(char **envp)
+int	pwd(void)
 {
-	int	cursor;
+	char	path[PATH_MAX];
 
-	cursor = 0;
-	while (*(envp + cursor) && ft_strncmp(*(envp + cursor), "PWD", 3))
-		cursor++;
-	write(1, *(envp + cursor) + 4, ft_strlen(*(envp + cursor) + 4));
+	getcwd(path, PATH_MAX - 1);
+	write(1, path, ft_strlen(path));
 	write(1, "\n", 1);
 	return (0);
 }

@@ -37,7 +37,7 @@ int		cd(int argc, char **argv, t_shell *shell);
 
 // builtin/pwd.c
 
-int		pwd(char **envp);
+int		pwd(void);
 
 // core/environment.c
 
