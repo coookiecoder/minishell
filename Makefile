@@ -1,8 +1,8 @@
 NAME=minishell
 
 FILES=main \
-	builtins/pwd builtins/cd builtins/echo \
-	utils/strlen utils/strdup utils/strncmp \
+	builtins/pwd builtins/cd builtins/echo builtins/exit \
+	utils/strlen utils/strdup utils/strncmp utils/atolli \
 	core/environment core/format_command core/make_command
 
 SRC=$(foreach f, $(FILES), src/$(f).c)

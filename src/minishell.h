@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                                            */
-/*   NOOT NOOT MOTHER FUCKER                      :#:  :#:         :#:  :#:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                :#:  :#::#     #::#:  :#:   */
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: the-day-it-was updated by UwU                                   */
+/*   Updated: 2023/11/27 13:56:37 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 
 typedef struct s_shell {
 	char	**env;
-	char	*prompt;
 }	t_shell;
 
 typedef struct s_command {
@@ -42,6 +41,10 @@ int		pwd(void);
 // builtin/echo.c
 
 int		echo(int argc, char **argv);
+
+// builtin/error.c
+
+int		convert_code(char *code);
 
 // core/environment.c
 
@@ -70,5 +73,9 @@ int		ft_strlen(const char *str);
 // utlis/strdup.c
 
 char	*ft_strdup(const char *s);
+
+// utlis/atolli.c
+
+int		atolli(char *number);
 
 #endif
