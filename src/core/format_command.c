@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                                            */
-/*   NOOT NOOT MOTHER FUCKER                      :#:  :#:         :#:  :#:   */
+/*   format_command.c                                   :+:      :+:    :+:   */
 /*                                                :#:  :#::#     #::#:  :#:   */
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: the-day-it-was updated by UwU                                   */
+/*   Updated: 2023/11/27 12:25:54 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	format_command(char *buffer, t_command *command)
 	if (command->argv)
 		clear_argv(command);
 	command->argc = find_argv_number(buffer + cursor, &argv_cursor) + 1;
-	command->argv = malloc(sizeof(char *) * (command->argc + 1));
+	command->argv = malloc(sizeof(char *) * (command->argc));
 	if (!command->argv)
 		return ;
 	while (*(buffer + cursor))

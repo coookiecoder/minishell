@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                                            */
-/*   NOOT NOOT MOTHER FUCKER                      :#:  :#:         :#:  :#:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                :#:  :#::#     #::#:  :#:   */
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: the-day-it-was updated by UwU                                   */
+/*   Updated: 2023/11/27 12:27:17 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	echo(int argc, char **argv)
 	int	argv_cursor;
 
 	argv_cursor = 1;
-	if (!ft_strncmp(*(argv + 1), "-n", 3))
+	if (argc != 1 && !ft_strncmp(*(argv + 1), "-n", 3))
 		argv_cursor++;
 	while (argv_cursor < argc)
 	{
@@ -26,7 +26,7 @@ int	echo(int argc, char **argv)
 		if (argv_cursor < argc)
 			write(1, " ", 1);
 	}
-	if (ft_strncmp(*(argv + 1), "-n", 3))
+	if (argc == 1 || ft_strncmp(*(argv + 1), "-n", 3))
 		write(1, "\n", 1);
 	return (0);
 }
