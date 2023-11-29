@@ -6,7 +6,7 @@
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: 2023/11/27 13:56:37 by abareux          ###   ########.fr       */
+/*   Updated: 2023/11/29 08:29:09 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,10 @@ int		echo(int argc, char **argv);
 // builtin/error.c
 
 int		convert_code(char *code);
+
+// builtin/env.c
+
+int		env(t_shell *shell);
 
 // core/environment.c
 
