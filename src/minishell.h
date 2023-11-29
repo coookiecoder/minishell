@@ -6,7 +6,7 @@
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: 2023/11/29 08:29:09 by abareux          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:37:17 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,14 @@ int		convert_code(char *code);
 
 int		env(t_shell *shell);
 
+// builtin/export.c
+
+int		export(char **buffer, t_command command, int *crs);
+
 // core/environment.c
 
 int		load_env(t_shell *sh, const char **envp);
-void	set_env(t_shell *sh, const char *name, const char *value);
+int		set_env(t_shell *sh, t_command command);
 void	unset_env(t_shell *sh, const char *name);
 char	*get_env(t_shell *sh, const char *name);
 void	unload_env(t_shell *sh);

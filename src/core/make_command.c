@@ -6,7 +6,7 @@
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: 2023/11/29 08:28:15 by abareux          ###   ########.fr       */
+/*   Updated: 2023/11/29 09:57:00 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	builtin(t_command command)
 		return (1);
 	else if (!strncmp(command.bin, "env", 4))
 		return (1);
+	else if (!strncmp(command.bin, "export", 7))
+		return (1);
 	return (0);
 }
 
@@ -41,6 +43,8 @@ int	do_builtin(t_command command, t_shell *shell)
 		return (echo(command.argc, command.argv));
 	else if (!strncmp(command.bin, "env", 4))
 		return (env(shell));
+	else if (!strncmp(command.bin, "export", 7))
+		return (set_env(shell, command));
 	return (0);
 }
 
@@ -76,11 +80,12 @@ void	try_path(t_command command, t_shell *shell)
 	while (*(path + cursor))
 	{
 		if (*(path + cursor) == ':')
-			if (try_bin(buffer, command, shell) == 0)
-				break ;
+			if (try_bin(buffer, command, shell) != -1)
+				return ;
 		*(buffer + cursor) = *(path + cursor);
 		cursor++;
 	}
+	exit(1);
 }
 
 int	make_command(t_command command, t_shell *shell)

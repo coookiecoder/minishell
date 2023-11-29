@@ -6,7 +6,7 @@
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: 2023/11/27 14:02:07 by abareux          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:38:52 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,32 @@ int	load_env(t_shell *sh, const char **envp)
 	return (1);
 }
 
-void	set_env(t_shell *sh, const char *name, const char *value)
+int	set_env(t_shell *shell, t_command command)
 {
-	(void) sh;
-	(void) name;
-	(void) value;
+	int		len;
+	int		cursor;
+	char	**buffer;
+
+	if (command.argc == 1)
+		return (1);
+	len = 0;
+	while (*(shell->env + len))
+		len++;
+	buffer = malloc(sizeof(char **) * (len + command.argc));
+	if (!buffer)
+		return (1);
+	cursor = 0;
+	while (cursor < len)
+	{
+		*(buffer + cursor) = *(shell->env + cursor);
+		cursor++;
+	}
+	if (export(buffer, command, &cursor))
+		return (free(buffer), 1);
+	*(buffer + cursor) = NULL;
+	free(shell->env);
+	shell->env = buffer;
+	return (0);
 }
 
 void	unset_env(t_shell *sh, const char *name)
@@ -60,14 +81,14 @@ char	*get_env(t_shell *sh, const char *name)
 	return (NULL);
 }
 
-void	unload_env(t_shell *sh)
+void	unload_env(t_shell *shell)
 {
-	char	**tmp;
+	int	cursor;
 
-	tmp = sh->env;
-	if (!tmp)
+	cursor = 0;
+	if (!shell->env)
 		return ;
-	while (*tmp)
-		free(*tmp++);
-	free(sh->env);
+	while (*(shell->env + cursor))
+		free(*(shell->env + cursor++));
+	free(shell->env);
 }

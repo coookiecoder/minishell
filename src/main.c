@@ -6,7 +6,7 @@
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: 2023/11/27 14:19:50 by abareux          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:20:49 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,31 @@ static
 void	ft_free(char *buffer, t_shell *shell, t_command *command)
 {
 	int	cursor;
-
-	free(buffer);
-	cursor = 0;
-	while (*(shell->env + cursor))
-		free(*(shell->env + cursor++));
-	free(shell->env);
+	if (buffer)
+		free(buffer);
+	unload_env(shell);
 	cursor = 1;
 	while (cursor < command->argc)
 		free (*(command->argv + cursor++));
 	free(command->argv);
 }
 
+static
+int	ft_exit(char *buffer, t_shell *shell, t_command *command)
+{
+	int	code;
+
+	if (command->argc > 1 && buffer)
+	{
+		code = convert_code(*(command->argv + 1));
+		return (ft_free(buffer, shell, command), code);
+	}
+	write(1, "exit\n", 5);
+	return (ft_free(buffer, shell, command), 0);
+}
+
 int	main(int argc, char **argv, const char **envp)
 {
-	int			code;
 	char		*buffer;
 	t_shell		shell;
 	t_command	command;
@@ -54,15 +64,11 @@ int	main(int argc, char **argv, const char **envp)
 	while (1)
 	{
 		buffer = readline("hello there UwU : ");
+		if (!buffer)
+			return (ft_exit(buffer, &shell, &command));
 		format_command(buffer, &command);
-		if (!strncmp(command.bin, "exit", 5) && command.argc > 1)
-			code = convert_code(*(command.argv + 1));
-		if (!strncmp(command.bin, "exit", 5) && command.argc > 1)
-			return (ft_free(buffer, &shell, &command), code);
-		if (!strncmp(command.bin, "exit", 5) && command.argc == 1)
-			write(1, "exit\n", 5);
-		if (!strncmp(command.bin, "exit", 5) && command.argc == 1)
-			return (ft_free(buffer, &shell, &command), 0);
+		if (!strncmp(command.bin, "exit", 5))
+			return (ft_exit(buffer, &shell, &command));
 		make_command(command, &shell);
 		free(buffer);
 	}
