@@ -12,9 +12,6 @@
 
 #include "minishell.h"
 
-#define ERR_EXPORT_NAME "Export Error: Provided name is not a valid name: "
-#define ERR_EXPORT_NAME_N 49
-
 int	set_env_exists(t_shell *sh, int pos, char *raw)
 {
 	char	*tmp;
@@ -62,9 +59,9 @@ int	is_valid(const char *raw)
 		i++;
 	if (raw[i] != '=' || (raw[0] >= '0' && raw[0] <= '9'))
 	{
-		write(1, ERR_EXPORT_NAME, ERR_EXPORT_NAME_N);
+		write(1, "bash: export: `", 15);
 		write(1, raw, ft_strlen(raw));
-		write(1, "\n", 1);
+		write(1, "': not a valid identifier\n", 26);
 		return (0);
 	}
 	return (1);
