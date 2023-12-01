@@ -12,24 +12,27 @@
 
 #include "minishell.h"
 
-void	signal_handler(int sig);
-
-int	main(int argc, char **argv, const char **envp)
+static
+void	ctrl_c(void)
 {
-	char		*buffer;
-	t_shell		shell;
+	write(0, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
 
-	load_env(&shell, envp);
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, signal_handler);
-	while (argc || argv)
-	{
-		buffer = readline(SHELL_PROMPT);
-		if (!buffer)
-			return (ft_exit(buffer, &shell, NULL));
-		add_history(buffer);
-		if (raw_parse(&shell, buffer))
-			return (ft_exit(buffer, &shell, NULL));
-		free(buffer);
-	}
+static
+void	ctrl_s(void)
+{
+	write(0, "\033[D\033[D\033[K", 9);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+void	signal_handler(int sig)
+{
+	if (sig == SIGINT)
+		ctrl_c();
+	else if (sig == SIGQUIT)
+		ctrl_s();
 }

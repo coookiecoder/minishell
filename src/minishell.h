@@ -17,12 +17,15 @@
 # include <unistd.h>
 # include <errno.h>
 # include <limits.h>
-# include <stdio.h> // /!\ TEST MODE ONLY
+# include <stdio.h>
 
 # include <readline/readline.h>
 # include <readline/history.h>
 
 # include <sys/wait.h>
+
+# define SHELL_PROMPT "UwU-Shell $> "
+# define SHELL_PROMPT_N 13
 
 # define ERR_PARSE_MEMORY "bash: memory allocation failed\n"
 # define ERR_PARSE_MEMORY_N 31
@@ -107,7 +110,7 @@ void	format_command(char *buffer, t_command *command);
 
 int		make_command(t_command command, t_shell *shell);
 
-// core/cleanup.c
+// core/cleanup.ce_quotetype
 
 void	ft_free(char *buffer, t_shell *shell, t_command *command);
 int		ft_exit(char *buffer, t_shell *shell, t_command *command);

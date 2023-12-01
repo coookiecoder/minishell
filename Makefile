@@ -2,7 +2,7 @@ NAME=minishell
 
 FILES=main \
 	builtins/pwd builtins/cd builtins/echo builtins/exit builtins/env builtins/export builtins/unset \
-	core/environment core/format_command core/make_command core/cleanup core/raw_parse core/syntax_parse \
+	core/environment core/format_command core/make_command core/cleanup core/raw_parse core/syntax_parse core/signal \
 	utils/strlen utils/strdup utils/strncmp utils/atolli utils/strjoin
 
 SRC=$(foreach f, $(FILES), src/$(f).c)

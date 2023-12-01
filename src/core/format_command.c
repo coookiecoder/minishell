@@ -26,17 +26,20 @@ void	clear_argv(t_command *command)
 static
 int	find_argv_number(char *buffer, int *argv_cursor)
 {
-	int	space;
-	int	result;
-	int	cursor;
+	int					space;
+	int					result;
+	int					cursor;
+	enum e_quotetype	quote;
 
 	space = 1;
 	result = 0;
 	cursor = 0;
+	quote = NO_QUOTE;
 	*argv_cursor = 1;
 	while (*(buffer + cursor))
 	{
-		if (*(buffer + cursor) != ' ' && space && *(buffer + cursor))
+		assign_quote_value(&quote, *(buffer + cursor));
+		if (*(buffer + cursor) != ' ' && space && !quote && *(buffer + cursor))
 		{
 			result = result + 1;
 			space = 0;
@@ -53,18 +56,38 @@ int	arg_len(char *buffer)
 	int	len;
 
 	len = 0;
-	while (*(buffer + len) && *(buffer + len) != ' ')
+	if (*buffer == '"')
+	{
 		len++;
+		while (*(buffer + len) && *(buffer + len) != '"')
+			len++;
+	}
+	else if (*buffer == '\'')
+	{
+		len++;
+		while (*(buffer + len) && *(buffer + len) != '\'')
+			len++;
+	}
+	else
+		while (*(buffer + len) && *(buffer + len) != ' ')
+			len++;
 	return (len);
 }
 
 static
 void	putargv(char *argv, char *buffer, int *cursor_main)
 {
-	int	cursor;
+	char	delimiter;
+	int		cursor;
 
 	cursor = 0;
-	while (*(buffer + cursor) && *(buffer + cursor) != ' ')
+	delimiter = *(buffer + cursor++);
+	if (delimiter != '"' && delimiter != '\'')
+	{
+		delimiter = ' ';
+		cursor--;
+	}
+	while (*(buffer + cursor) && *(buffer + cursor) != delimiter)
 	{
 		*(argv + cursor) = *(buffer + cursor);
 		cursor++;
@@ -98,7 +121,7 @@ void	format_command(char *buffer, t_command *command)
 	command->argv = malloc(sizeof(char *) * (command->argc));
 	if (!command->argv)
 		return ;
-	while (*(buffer + cursor))
+	while (argv_cursor < command->argc)
 	{
 		*(command->argv + argv_cursor) = malloc(arg_len(buffer + cursor) + 1);
 		putargv(*(command->argv + argv_cursor++), buffer + cursor, &cursor);
