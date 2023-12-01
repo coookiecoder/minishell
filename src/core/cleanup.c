@@ -29,7 +29,27 @@ void	ft_freecmd(t_command *cmd)
 	cursor = 1;
 	while (cursor < cmd->argc)
 		free(cmd->argv[cursor++]);
+	if (cmd->raw)
+		free(cmd->raw);
 	free(cmd->argv);
+}
+
+void	ft_freeexec(t_exec *exe)
+{
+	size_t	cursor;
+
+	if (!exe)
+		return ;
+	cursor = -1;
+	while (++cursor < exe->total)
+	{
+		if (exe->cmds[cursor])
+		{
+			ft_freecmd(exe->cmds[cursor]);
+			free(exe->cmds[cursor]);
+		}
+	}
+	free(exe->cmds);
 }
 
 int	ft_exit(char *buffer, t_shell *shell, t_command *command)

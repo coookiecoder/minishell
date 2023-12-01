@@ -17,11 +17,18 @@
 # include <unistd.h>
 # include <errno.h>
 # include <limits.h>
+# include <stdio.h> // /!\ TEST MODE ONLY
 
 # include <readline/readline.h>
 # include <readline/history.h>
 
 # include <sys/wait.h>
+
+# define ERR_PARSE_MEMORY "bash: memory allocation failed\n"
+# define ERR_PARSE_MEMORY_N 31
+
+# define ERR_PARSE_SYNTAX "bash: syntax error\n"
+# define ERR_PARSE_SYNTAX_N 19
 
 enum e_quotetype {
 	NO_QUOTE = 0,
@@ -41,6 +48,7 @@ typedef struct s_shell {
 }	t_shell;
 
 typedef struct s_command {
+	char		*raw;
 	char		bin[PATH_MAX];
 	int			argc;
 	char		**argv;
@@ -104,10 +112,14 @@ int		make_command(t_command command, t_shell *shell);
 void	ft_free(char *buffer, t_shell *shell, t_command *command);
 int		ft_exit(char *buffer, t_shell *shell, t_command *command);
 void	ft_freecmd(t_command *cmd);
+void	ft_freeexec(t_exec *exe);
 
 // core/raw_parsing.c
 
+void	init_command(t_command *command);
 int		raw_parse(t_shell *sh, char *raw);
+void	assign_quote_value(enum e_quotetype *v, char c);
+char	*expension(t_shell *sh, char *raw);
 
 // utlis/strncmp.c
 
@@ -136,6 +148,7 @@ typedef struct s__exp {
 	enum e_quotetype	quote;
 	char				*tmp;
 	int					x;
+	int					y;
 }	t__exp;
 
 #endif

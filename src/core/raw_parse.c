@@ -11,22 +11,22 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#define ERR_PARSE_MEMORY "Parsing Error: Memory allocation failed\n"
-#define ERR_PARSE_MEMORY_N 40
 
-static
+size_t	pipe_counter(char *raw);
+int		execution_parse(t_exec *exe, char *raw);
+
 void	init_command(t_command *command)
 {
 	int	cursor;
 
 	cursor = 0;
+	command->raw = NULL;
 	command->argv = NULL;
 	command->argc = 1;
 	while (cursor < PATH_MAX)
 		*(command->bin + cursor++) = '\0';
 }
 
-static
 void	assign_quote_value(enum e_quotetype *v, char c)
 {
 	if (c == '\'' && *v == NO_QUOTE)
@@ -39,61 +39,58 @@ void	assign_quote_value(enum e_quotetype *v, char c)
 }
 
 static
-int	apply_expension(t_shell *sh, char **base, char *raw)
+int	token_parse(t_exec *exe, char *raw)
 {
-	int		len;
-	char	*env;
-	char	*val;
+	size_t	i;
 
-	len = 0;
-	while (raw && raw[len] && (raw[len] == '_' \
-		|| (raw[len] >= 'a' && raw[len] <= 'z') \
-		|| (raw[len] >= 'A' && raw[len] <= 'Z') \
-		|| (raw[len] >= '0' && raw[len] <= '9')))
-		len++;
-	env = ft_strndup(raw, len);
-	val = get_env(sh, env);
-	if (val)
-		*base = ft_strjoin(*base, val, LEFT, -1);
-	free(env);
-	return (len + 1);
+	exe->total = pipe_counter(raw) + 1;
+	exe->cmds = malloc(sizeof(void *) * (exe->total + 1));
+	if (!exe->cmds)
+		return (write(1, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
+	i = 0;
+	while (i < exe->total + 1)
+		exe->cmds[i++] = NULL;
+	i = 0;
+	while (i < exe->total)
+	{
+		exe->cmds[i] = malloc(sizeof(t_command));
+		if (!exe->cmds[i])
+			return (write(1, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
+		init_command(exe->cmds[i++]);
+	}
+	return (execution_parse(exe, raw));
 }
 
-char	*expension(t_shell *sh, char *raw)
+int	cmd_parse(t_shell *sh, t_command *cmd)
 {
-	t__exp	e;
+	char	*parsed;
 
-	e = (t__exp){NO_QUOTE, ft_strdup(""), 0};
-	if (!e.tmp)
-		return (NULL);
-	while (raw[e.x])
-	{
-		assign_quote_value(&e.quote, raw[e.x]);
-		if (raw[e.x] == '$' && e.quote != SINGLE_QUOTE && raw[e.x + 1])
-			e.x += apply_expension(sh, &e.tmp, &raw[e.x + 1]);
-		else
-			e.tmp = ft_strjoin(e.tmp, &raw[e.x++], LEFT, 1);
-		if (!e.tmp)
-			return (NULL);
-	}
-	return (e.tmp);
+	parsed = expension(sh, cmd->raw);
+	if (!parsed)
+		return (write(1, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
+	format_command(parsed, cmd);
+	if (!cmd->argv)
+		return (free(parsed), \
+			write(1, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
+	if (!strncmp(cmd->bin, "exit", 5))
+		return (free(parsed), 1);
+	make_command(*cmd, sh);
+	return (free(parsed), 0);
 }
 
 int	raw_parse(t_shell *sh, char *raw)
 {
-	t_command	command;
-	char		*parsed;
+	t_exec		exe;
+	size_t		i;
 
-	parsed = expension(sh, raw);
-	if (!parsed)
-		return (write(1, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 1);
-	init_command(&command);
-	format_command(parsed, &command);
-	if (!command.argv)
-		return (free(parsed), \
-			write(1, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 1);
-	if (!strncmp(command.bin, "exit", 5))
-		return (free(parsed), ft_freecmd(&command), 1);
-	make_command(command, sh);
-	return (free(parsed), ft_freecmd(&command), 0);
+	if (!token_parse(&exe, raw))
+		return (ft_freeexec(&exe), 0);
+	i = 0;
+	while (i < exe.total)
+	{
+		if (cmd_parse(sh, exe.cmds[i++]))
+			return (ft_freeexec(&exe), 1);
+	}
+	ft_freeexec(&exe);
+	return (0);
 }
