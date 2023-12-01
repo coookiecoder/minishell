@@ -26,7 +26,7 @@ void	ft_freecmd(t_command *cmd)
 
 	if (!cmd)
 		return ;
-	cursor = 1;
+	cursor = 0;
 	while (cursor < cmd->argc)
 		free(cmd->argv[cursor++]);
 	if (cmd->raw)

@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <readline/history.h>
 
+int		g_sig;
 void	signal_handler(int sig);
 
 int	main(int argc, char **argv, const char **envp)
@@ -19,6 +21,8 @@ int	main(int argc, char **argv, const char **envp)
 	char		*buffer;
 	t_shell		shell;
 
+	g_sig = 0;
+	shell = (t_shell){0, NULL};
 	load_env(&shell, envp);
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, signal_handler);
@@ -27,6 +31,11 @@ int	main(int argc, char **argv, const char **envp)
 		buffer = readline(SHELL_PROMPT);
 		if (!buffer)
 			return (ft_exit(buffer, &shell, NULL));
+		if (is_empty(buffer))
+		{
+			free(buffer);
+			continue ;
+		}
 		add_history(buffer);
 		if (raw_parse(&shell, buffer))
 			return (ft_exit(buffer, &shell, NULL));

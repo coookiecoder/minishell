@@ -33,6 +33,9 @@
 # define ERR_PARSE_SYNTAX "bash: syntax error\n"
 # define ERR_PARSE_SYNTAX_N 19
 
+// Used for handling SIGNALs while running execve and forks tasks
+extern int	g_sig;
+
 enum e_quotetype {
 	NO_QUOTE = 0,
 	SINGLE_QUOTE,
@@ -47,6 +50,7 @@ enum e_target {
 };
 
 typedef struct s_shell {
+	int		last_code;
 	char	**env;
 }	t_shell;
 
@@ -108,9 +112,10 @@ void	format_command(char *buffer, t_command *command);
 
 // core/make_command.c
 
-int		make_command(t_command command, t_shell *shell);
+int		make_command(
+			t_command command, t_shell *shell, t_exec *exe, size_t pos);
 
-// core/cleanup.ce_quotetype
+// core/cleanup.c
 
 void	ft_free(char *buffer, t_shell *shell, t_command *command);
 int		ft_exit(char *buffer, t_shell *shell, t_command *command);
@@ -141,10 +146,16 @@ char	*ft_strdup(const char *s);
 // utlis/atolli.c
 
 int		atolli(char *number);
+char	*ft_itoa(int n);
 
 // utils/strjoin.c
 
 char	*ft_strjoin(char *string_a, char *string_b, int mode, size_t n);
+
+// utlis/is_space.c
+
+int		ft_is_space(char c);
+int		is_empty(const char *buffer);
 
 // === NORME ABUSE BE LIKE === //
 typedef struct s__exp {

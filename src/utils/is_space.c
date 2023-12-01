@@ -12,34 +12,23 @@
 
 #include "minishell.h"
 
-static
-void	ctrl_c(void)
+int	ft_is_space(char c)
 {
-	write(0, "\n", 1);
-	if (g_sig)
-		return ;
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	if (c == ' ')
+		return (1);
+	if (c >= '\t' && c <= '\r')
+		return (1);
+	return (0);
 }
 
-static
-void	ctrl_s(void)
+int	is_empty(const char *buffer)
 {
-	if (g_sig)
-	{
-		write(1, "Quit\n", 5);
-		return ;
-	}
-	write(0, "\033[D\033[D\033[K", 9);
-	rl_on_new_line();
-	rl_redisplay();
-}
+	int		i;
 
-void	signal_handler(int sig)
-{
-	if (sig == SIGINT)
-		ctrl_c();
-	else if (sig == SIGQUIT)
-		ctrl_s();
+	i = 0;
+	while (ft_is_space(buffer[i]))
+		i++;
+	if (i == ft_strlen(buffer))
+		return (1);
+	return (0);
 }

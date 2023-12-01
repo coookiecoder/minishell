@@ -13,33 +13,60 @@
 #include "minishell.h"
 
 static
-void	ctrl_c(void)
+long long int	ft_abs(long long int n)
 {
-	write(0, "\n", 1);
-	if (g_sig)
-		return ;
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	if (n < 0)
+		return (-n);
+	return (n);
 }
 
 static
-void	ctrl_s(void)
+int	ft_intlen(long long int n)
 {
-	if (g_sig)
+	int	result;
+
+	if (n == 0)
+		return (1);
+	if (n < 0)
+		result = 1;
+	else
+		result = 0;
+	n = ft_abs(n);
+	while (n != 0)
 	{
-		write(1, "Quit\n", 5);
-		return ;
+		n = n / 10;
+		result++;
 	}
-	write(0, "\033[D\033[D\033[K", 9);
-	rl_on_new_line();
-	rl_redisplay();
+	return (result);
 }
 
-void	signal_handler(int sig)
+static
+int	ft_sign(int n)
 {
-	if (sig == SIGINT)
-		ctrl_c();
-	else if (sig == SIGQUIT)
-		ctrl_s();
+	if (n < 0)
+		return (1);
+	return (0);
+}
+
+char	*ft_itoa(int n)
+{
+	int		negative;
+	int		len;
+	char	*result;
+
+	negative = ft_sign(n);
+	len = ft_intlen(n);
+	result = malloc(sizeof(char) * len + 1);
+	if (!result)
+		return (0);
+	*(result + len) = '\0';
+	while (len > 0)
+	{
+		*(result + len - 1) = ft_abs(n % 10) + '0';
+		n = n / 10;
+		len--;
+	}
+	if (negative)
+		*result = '-';
+	return (result);
 }

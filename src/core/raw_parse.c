@@ -61,7 +61,8 @@ int	token_parse(t_exec *exe, char *raw)
 	return (execution_parse(exe, raw));
 }
 
-int	cmd_parse(t_shell *sh, t_command *cmd)
+static
+int	cmd_parse(t_shell *sh, t_command *cmd, t_exec *exe, size_t pos)
 {
 	char	*parsed;
 
@@ -69,12 +70,17 @@ int	cmd_parse(t_shell *sh, t_command *cmd)
 	if (!parsed)
 		return (write(1, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
 	format_command(parsed, cmd);
+	*(cmd->argv) = malloc(PATH_MAX);
+	if (!*(cmd->argv))
+		return (free(parsed), \
+			write(1, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
+	getcwd(*(cmd->argv), PATH_MAX);
 	if (!cmd->argv)
 		return (free(parsed), \
 			write(1, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
 	if (!strncmp(cmd->bin, "exit", 5))
 		return (free(parsed), 1);
-	make_command(*cmd, sh);
+	make_command(*cmd, sh, exe, pos);
 	return (free(parsed), 0);
 }
 
@@ -88,8 +94,9 @@ int	raw_parse(t_shell *sh, char *raw)
 	i = 0;
 	while (i < exe.total)
 	{
-		if (cmd_parse(sh, exe.cmds[i++]))
+		if (cmd_parse(sh, exe.cmds[i], &exe, i))
 			return (ft_freeexec(&exe), 1);
+		i++;
 	}
 	ft_freeexec(&exe);
 	return (0);

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
 
 int	builtin(t_command command)
 {
@@ -86,18 +87,26 @@ void	try_path(t_command command, t_shell *shell)
 	exit(1);
 }
 
-int	make_command(t_command command, t_shell *shell)
+int	make_command(t_command command, t_shell *shell, t_exec *exe, size_t pos)
 {
 	pid_t	pid;
+	int		fds[2];
 
 	if (builtin(command))
 		return (do_builtin(command, shell));
-	else
+	if (pos < exe->total - 1)
+		pipe(fds);
+	pid = fork();
+	if (!pid)
 	{
-		pid = fork();
-		if (!pid)
-			try_path(command, shell);
-		waitpid(-1, NULL, 0);
+		if (pos < exe->total - 1)
+			dup2(fds[1], STDOUT_FILENO);
+		if (pos)
+			dup2(fds[0], STDIN_FILENO);
+		try_path(command, shell);
 	}
+	g_sig = 1;
+	waitpid(-1, &shell->last_code, 0);
+	g_sig = 0;
 	return (0);
 }
