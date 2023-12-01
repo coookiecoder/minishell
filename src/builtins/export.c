@@ -50,7 +50,7 @@ int	set_env_new(t_shell *sh, int len, char *raw)
 }
 
 static
-int is_valid(const char *raw)
+int	is_valid(const char *raw)
 {
 	int		i;
 
@@ -83,8 +83,9 @@ int	ft_export(t_shell *sh, t_command cmd)
 	{
 		if (!is_valid(cmd.argv[c]))
 			fails++;
-		else if (!set_env(sh, cmd.argv[c++]))
+		else if (!set_env(sh, cmd.argv[c]))
 			fails++;
+		c++;
 	}
 	return (fails);
 }
