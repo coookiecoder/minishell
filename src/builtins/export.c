@@ -1,54 +1,90 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                                            */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   NOOT NOOT MOTHER FUCKER                      :#:  :#:         :#:  :#:   */
 /*                                                :#:  :#::#     #::#:  :#:   */
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: 2023/11/29 10:44:12 by abareux          ###   ########.fr       */
+/*   Updated: the-day-it-was updated by UwU                                   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static
-int	find_egal(char *string)
-{
-	int	cursor;
+#define ERR_EXPORT_NAME "Export Error: Provided name is not a valid name: "
+#define ERR_EXPORT_NAME_N 49
 
-	cursor = 0;
-	while (*(string + cursor))
-	{
-		if (*(string + cursor) == '=' && *(string + cursor + 1) != '\0')
-			return (1);
-		cursor++;
-	}
-	return (0);
+int	set_env_exists(t_shell *sh, int pos, char *raw)
+{
+	char	*tmp;
+
+	tmp = ft_strdup(raw);
+	if (!tmp)
+		return (0);
+	free(sh->env[pos]);
+	sh->env[pos] = tmp;
+	return (1);
 }
 
-int	export(char **buffer, t_command command, int *crs)
+int	set_env_new(t_shell *sh, int len, char *raw)
 {
-	int	crs_c;
-	int	crs_v;
+	char	*tmp;
+	char	**buffer;
+	int		i;
 
-	crs_c = 1;
-	while (crs_c < command.argc)
+	tmp = ft_strdup(raw);
+	if (!tmp)
+		return (0);
+	buffer = malloc(sizeof(void *) * (len + 2));
+	if (!buffer)
+		return (free(tmp), 0);
+	i = -1;
+	while (++i < len)
+		buffer[i] = sh->env[i];
+	buffer[i++] = tmp;
+	buffer[i] = NULL;
+	free(sh->env);
+	sh->env = buffer;
+	return (1);
+}
+
+static
+int is_valid(const char *raw)
+{
+	int		i;
+
+	i = 0;
+	while (raw && raw[i] && (raw[i] == '_' \
+		|| (raw[i] >= 'a' && raw[i] <= 'z') \
+		|| (raw[i] >= 'A' && raw[i] <= 'Z') \
+		|| (raw[i] >= '0' && raw[i] <= '9')))
+		i++;
+	if (raw[i] != '=' || (raw[0] >= '0' && raw[0] <= '9'))
 	{
-		*(buffer + *crs) = malloc(ft_strlen(*(command.argv + crs_c)) + 1);
-		if (!*(buffer + *crs))
-			return (1);
-		if (!find_egal(*(command.argv + crs_c)))
-			return (1);
-		crs_v = 0;
-		while (*(*(command.argv + crs_c) + crs_v))
-		{
-			*(*(buffer + *crs) + crs_v) = *(*(command.argv + crs_c) + crs_v);
-			crs_v++;
-		}
-		*(*(buffer + *crs) + crs_v) = '\0';
-		crs_c++;
-		(*crs)++;
+		write(1, ERR_EXPORT_NAME, ERR_EXPORT_NAME_N);
+		write(1, raw, ft_strlen(raw));
+		write(1, "\n", 1);
+		return (0);
 	}
-	return (0);
+	return (1);
+}
+
+int	ft_export(t_shell *sh, t_command cmd)
+{
+	int		c;
+	int		fails;
+
+	if (cmd.argc < 2)
+		return (0);
+	c = 1;
+	fails = 0;
+	while (c < cmd.argc)
+	{
+		if (!is_valid(cmd.argv[c]))
+			fails++;
+		else if (!set_env(sh, cmd.argv[c++]))
+			fails++;
+	}
+	return (fails);
 }

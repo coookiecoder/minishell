@@ -12,21 +12,16 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, const char **envp)
+int	keep_env(char *env, t_command cmd)
 {
-	char		*buffer;
-	t_shell		shell;
+	int	crs;
 
-	load_env(&shell, envp);
-	(void) argc;
-	(void) argv;
-	while (1)
+	crs = 1;
+	while (crs < cmd.argc)
 	{
-		buffer = readline("hello there UwU : ");
-		if (!buffer)
-			return (ft_exit(buffer, &shell, NULL));
-		if (raw_parse(&shell, buffer))
-			return (ft_exit(buffer, &shell, NULL));
-		free(buffer);
+		if (!strncmp(env, *(cmd.argv + crs), ft_strlen(*(cmd.argv + crs))))
+			return (free(env), 0);
+		crs++;
 	}
+	return (1);
 }

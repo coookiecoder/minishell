@@ -1,22 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                                            */
-/*   make_command.c                                     :+:      :+:    :+:   */
+/*   NOOT NOOT MOTHER FUCKER                      :#:  :#:         :#:  :#:   */
 /*                                                :#:  :#::#     #::#:  :#:   */
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: 2023/11/29 09:57:00 by abareux          ###   ########.fr       */
+/*   Updated: the-day-it-was updated by UwU                                   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <bits/types/error_t.h>
-#include <iso646.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
 
 int	builtin(t_command command)
 {
@@ -29,6 +23,8 @@ int	builtin(t_command command)
 	else if (!strncmp(command.bin, "env", 4))
 		return (1);
 	else if (!strncmp(command.bin, "export", 7))
+		return (1);
+	else if (!strncmp(command.bin, "unset", 6))
 		return (1);
 	return (0);
 }
@@ -44,7 +40,9 @@ int	do_builtin(t_command command, t_shell *shell)
 	else if (!strncmp(command.bin, "env", 4))
 		return (env(shell));
 	else if (!strncmp(command.bin, "export", 7))
-		return (set_env(shell, command));
+		return (ft_export(shell, command));
+	else if (!strncmp(command.bin, "unset", 6))
+		return (unset_env(shell, command));
 	return (0);
 }
 

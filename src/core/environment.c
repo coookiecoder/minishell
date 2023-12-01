@@ -1,16 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                                            */
-/*   environment.c                                      :+:      :+:    :+:   */
+/*   NOOT NOOT MOTHER FUCKER                      :#:  :#:         :#:  :#:   */
 /*                                                :#:  :#::#     #::#:  :#:   */
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: 2023/11/29 10:38:52 by abareux          ###   ########.fr       */
+/*   Updated: the-day-it-was updated by UwU                                   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	set_env_exists(t_shell *sh, int pos, char *raw);
+int	set_env_new(t_shell *sh, int len, char *raw);
 
 int	load_env(t_shell *sh, const char **envp)
 {
@@ -33,38 +36,46 @@ int	load_env(t_shell *sh, const char **envp)
 	return (1);
 }
 
-int	set_env(t_shell *shell, t_command command)
+int	set_env(t_shell *sh, char *raw)
 {
 	int		len;
-	int		cursor;
-	char	**buffer;
+
+	len = 0;
+	while (sh->env[len])
+	{
+		if (!ft_strncmp(raw, sh->env[len], ft_strclen(raw, '=')))
+			return (set_env_exists(sh, len, raw));
+		len++;
+	}
+	return (set_env_new(sh, len, raw));
+}
+
+int	unset_env(t_shell *shell, t_command command)
+{
+	int	len;
+	int	cursor;
+	int	cursor_new;
+	int	not_removed;
 
 	if (command.argc == 1)
-		return (1);
+		return (0);
 	len = 0;
 	while (*(shell->env + len))
 		len++;
-	buffer = malloc(sizeof(char **) * (len + command.argc));
-	if (!buffer)
-		return (1);
 	cursor = 0;
+	cursor_new = 0;
+	not_removed = 0;
 	while (cursor < len)
 	{
-		*(buffer + cursor) = *(shell->env + cursor);
-		cursor++;
+		if (keep_env(*(shell->env + cursor), command))
+			*(shell->env + cursor_new++) = *(shell->env + cursor++);
+		else
+			cursor++;
 	}
-	if (export(buffer, command, &cursor))
-		return (free(buffer), 1);
-	*(buffer + cursor) = NULL;
-	free(shell->env);
-	shell->env = buffer;
-	return (0);
-}
-
-void	unset_env(t_shell *sh, const char *name)
-{
-	(void) sh;
-	(void) name;
+	not_removed = cursor - cursor_new;
+	while (cursor_new <= len)
+		*(shell->env + cursor_new++) = NULL;
+	return (not_removed);
 }
 
 char	*get_env(t_shell *sh, const char *name)
@@ -72,11 +83,14 @@ char	*get_env(t_shell *sh, const char *name)
 	const int	len = ft_strlen(name);
 	char		**tmp;
 
+	if (!name)
+		return (NULL);
 	tmp = sh->env;
 	while (*tmp)
 	{
 		if (!ft_strncmp(*tmp, name, len))
 			return (*tmp + len + 1);
+		tmp++;
 	}
 	return (NULL);
 }

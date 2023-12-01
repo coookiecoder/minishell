@@ -1,15 +1,15 @@
 NAME=minishell
 
 FILES=main \
-	builtins/pwd builtins/cd builtins/echo builtins/exit builtins/env builtins/export \
-	utils/strlen utils/strdup utils/strncmp utils/atolli \
-	core/environment core/format_command core/make_command
+	builtins/pwd builtins/cd builtins/echo builtins/exit builtins/env builtins/export builtins/unset \
+	core/environment core/format_command core/make_command core/cleanup core/raw_parsing \
+	utils/strlen utils/strdup utils/strncmp utils/atolli utils/strjoin
 
 SRC=$(foreach f, $(FILES), src/$(f).c)
 OBJ=$(foreach f, $(FILES), obj/$(f).o)
 
-CCFLAGS=-Isrc -Wall -Wextra -Werror -Wunreachable-code -Wunreachable-code-aggressive -Wpedantic -g3
-LNFLAGS=-lreadline #-fsanitize=address
+CCFLAGS=-Isrc -Wall -Wextra -Werror -Wunreachable-code -Wpedantic -g3 -Wunreachable-code-aggressive
+LNFLAGS=-lreadline -g3 -fsanitize=address
 
 all: $(NAME)
 

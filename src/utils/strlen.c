@@ -19,3 +19,13 @@ int	ft_strlen(const char *str)
 		a++;
 	return (a);
 }
+
+int	ft_strclen(const char *str, const char stop)
+{
+	int	a;
+
+	a = 0;
+	while (str && *(str + a) && *(str + a) != stop)
+		a++;
+	return (a);
+}

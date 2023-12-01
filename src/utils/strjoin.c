@@ -12,21 +12,28 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, const char **envp)
+char	*ft_strjoin(char *string_a, char *string_b, int mode, size_t n)
 {
-	char		*buffer;
-	t_shell		shell;
+	size_t	cursor;
+	size_t	cursor_string;
+	char	*result;
 
-	load_env(&shell, envp);
-	(void) argc;
-	(void) argv;
-	while (1)
-	{
-		buffer = readline("hello there UwU : ");
-		if (!buffer)
-			return (ft_exit(buffer, &shell, NULL));
-		if (raw_parse(&shell, buffer))
-			return (ft_exit(buffer, &shell, NULL));
-		free(buffer);
-	}
+	cursor = 0;
+	cursor_string = 0;
+	if (!string_a)
+		return (ft_strdup(string_b));
+	result = malloc(ft_strlen(string_a) + ft_strlen(string_b) + 1);
+	if (!result)
+		return (NULL);
+	while (*(string_a + cursor_string))
+		*(result + cursor++) = *(string_a + cursor_string++);
+	cursor_string = 0;
+	while (*(string_b + cursor_string) && cursor_string < n)
+		*(result + cursor++) = *(string_b + cursor_string++);
+	*(result + cursor) = 0;
+	if (mode == 1 || mode == 3)
+		free(string_a);
+	if (mode == 2 || mode == 3)
+		free(string_b);
+	return (result);
 }
