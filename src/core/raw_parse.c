@@ -73,12 +73,8 @@ int	cmd_parse(t_shell *sh, t_command *cmd, t_exec *exe, size_t pos)
 	if (!parsed)
 		return (free(parsed), write(2, ERR_PIPES_FILE, ERR_PIPES_FILE_N), 0);
 	format_command(parsed, cmd);
-	*(cmd->argv) = malloc(PATH_MAX);
+	*(cmd->argv) = ft_strdup(cmd->bin);
 	if (!*(cmd->argv))
-		return (free(parsed), \
-			write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
-	getcwd(*(cmd->argv), PATH_MAX);
-	if (!cmd->argv)
 		return (free(parsed), \
 			write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
 	if (!strncmp(cmd->bin, "exit", 5))

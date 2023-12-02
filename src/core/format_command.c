@@ -121,5 +121,5 @@ void	format_command(char *buffer, t_command *command)
 		*(command->argv + argv_cursor) = malloc(arg_len(buffer + cursor) + 1);
 		putargv(*(command->argv + argv_cursor++), buffer + cursor, &cursor);
 	}
-	*(command->argv + argv_cursor) = NULL;
+	*(command->argv + command->argc) = NULL;
 }
