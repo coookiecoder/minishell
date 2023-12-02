@@ -17,7 +17,7 @@ int	echo(int argc, char **argv)
 	int	argv_cursor;
 
 	argv_cursor = 1;
-	if (argc != 1 && !ft_strncmp(*(argv + 1), "-n", 3))
+	while (argc != 1 && !ft_strncmp(*(argv + argv_cursor), "-n", 3))
 		argv_cursor++;
 	while (argv_cursor < argc)
 	{
