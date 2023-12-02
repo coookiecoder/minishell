@@ -57,6 +57,7 @@ int	arg_len(char *buffer)
 	int					len;
 
 	len = 0;
+	quote = NO_QUOTE;
 	while (*(buffer + len))
 	{
 		assign_quote_value(&quote, *(buffer + len));

@@ -39,13 +39,17 @@ void	close_fd(size_t pos, t_exec *exe)
 {
 	if (pos % 2 == 1)
 	{
-		close(exe->fds_odd[0]);
-		close(exe->fds_odd[1]);
+		if (exe->fds_odd[0] >= 0)
+			close(exe->fds_odd[0]);
+		if (exe->fds_odd[1] >= 0)
+			close(exe->fds_odd[1]);
 	}
 	else
 	{
-		close(exe->fds_even[0]);
-		close(exe->fds_even[1]);
+		if (exe->fds_even[0] >= 0)
+			close(exe->fds_even[0]);
+		if (exe->fds_even[1] >= 0)
+			close(exe->fds_even[1]);
 	}
 }
 

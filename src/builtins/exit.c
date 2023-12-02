@@ -22,14 +22,16 @@ int	is_allowed(char c)
 	return (0);
 }
 
-int	convert_code(char *code)
+int	convert_code(t_command *cmd)
 {
-	int	code_int;
-	int	cursor;
+	char	*code;
+	int		code_int;
+	int		cursor;
 
-	if (!code)
+	if (cmd->argc == 1)
 		return (0);
 	cursor = 0;
+	code = cmd->argv[1];
 	while (is_allowed(*(code + cursor)))
 		cursor++;
 	if (*(code + cursor) == '\0')

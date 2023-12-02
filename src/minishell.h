@@ -109,7 +109,7 @@ int		echo(int argc, char **argv);
 
 // builtin/error.c
 
-int		convert_code(char *code);
+int		convert_code(t_command *cmd);
 
 // builtin/env.c
 
@@ -146,6 +146,7 @@ void	ft_free(char *buffer, t_shell *shell, t_command *command);
 int		ft_exit(char *buffer, t_shell *shell, t_command *command);
 void	ft_freecmd(t_command *cmd);
 void	ft_freeexec(t_exec *exe);
+void	ft_bzero(char *buffer, const size_t size);
 
 // core/raw_parsing.c
 

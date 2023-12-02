@@ -40,6 +40,7 @@ void	try_path(t_command command, t_shell *shell)
 	while (*(shell->env + crs) && ft_strncmp(*(shell->env + crs), "PATH=", 5))
 		crs++;
 	path = *(shell->env + crs);
+	ft_bzero(buffer, PATH_MAX);
 	crs = 0;
 	execve(command.bin, command.argv, shell->env);
 	while (path && *(path + crs))
@@ -51,9 +52,9 @@ void	try_path(t_command command, t_shell *shell)
 		crs++;
 	}
 	write(2, ERR_UNKNOWN_CMD, ERR_UNKNOWN_CMD_N);
-	if (command.fd_in)
+	if (command.fd_in >= 0)
 		close(command.fd_in);
-	if (command.fd_out)
+	if (command.fd_out >= 0)
 		close(command.fd_out);
 	exit(127);
 }
