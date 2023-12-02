@@ -12,6 +12,29 @@
 
 #include "minishell.h"
 
+char	*purge_quote(char *str)
+{
+	t__exp		e;
+
+	e = (t__exp){NO_QUOTE, ft_strdup(""), 0, 0};
+	if (!e.tmp)
+		return (free(str), NULL);
+	while (str[e.x])
+	{
+		e.y = e.quote;
+		assign_quote_value(&e.quote, str[e.x]);
+		if (str[e.x] == (char) e.quote || str[e.x] == (char) e.y)
+		{
+			e.x++;
+			continue ;
+		}
+		e.tmp = ft_strjoin(e.tmp, &str[e.x++], LEFT, 1);
+		if (!e.tmp)
+			return (free(str), NULL);
+	}
+	return (free(str), e.tmp);
+}
+
 static
 int	apply_expension(t_shell *sh, char **base, char *raw)
 {

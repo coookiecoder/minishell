@@ -38,7 +38,7 @@ char	*get_entry(const char *target, int *skipped)
 		e.y++;
 	}
 	*(e.tmp + e.y) = '\0';
-	return (e.tmp);
+	return (purge_quote(e.tmp));
 }
 
 static

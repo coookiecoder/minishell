@@ -153,6 +153,7 @@ void	init_command(t_command *command);
 int		raw_parse(t_shell *sh, char *raw);
 void	assign_quote_value(enum e_quotetype *v, char c);
 char	*expension(t_shell *sh, char *raw);
+char	*purge_quote(char *str);
 
 // core/piping.c
 
