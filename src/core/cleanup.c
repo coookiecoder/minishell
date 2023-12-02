@@ -31,6 +31,8 @@ void	ft_freecmd(t_command *cmd)
 		free(cmd->argv[cursor++]);
 	if (cmd->raw)
 		free(cmd->raw);
+	close(cmd->fd_in);
+	close(cmd->fd_out);
 	free(cmd->argv);
 }
 
@@ -49,6 +51,10 @@ void	ft_freeexec(t_exec *exe)
 			free(exe->cmds[cursor]);
 		}
 	}
+	close(exe->fds_odd[0]);
+	close(exe->fds_odd[1]);
+	close(exe->fds_even[0]);
+	close(exe->fds_even[1]);
 	free(exe->cmds);
 }
 

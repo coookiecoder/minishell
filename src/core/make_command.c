@@ -84,29 +84,33 @@ void	try_path(t_command command, t_shell *shell)
 		*(buffer + cursor) = *(path + cursor);
 		cursor++;
 	}
+	write(2, ERR_UNKNOWN_CMD, ERR_UNKNOWN_CMD_N);
 	exit(1);
 }
 
 int	make_command(t_command command, t_shell *shell, t_exec *exe, size_t pos)
 {
 	pid_t	pid;
-	int		fds[2];
 
-	if (builtin(command))
-		return (do_builtin(command, shell));
-	if (pos < exe->total - 1)
-		pipe(fds);
+	new_pipe(pos, exe);
 	pid = fork();
 	if (!pid)
 	{
-		if (pos < exe->total - 1)
-			dup2(fds[1], STDOUT_FILENO);
-		if (pos)
-			dup2(fds[0], STDIN_FILENO);
+		duplicate_input(pos, exe);
+		duplicate_output(pos, exe);
+		if (command.fd_in)
+			dup2(command.fd_in, STDIN_FILENO);
+		if (command.fd_out)
+			dup2(command.fd_out, STDOUT_FILENO);
+		if (builtin(command))
+			exit(do_builtin(command, shell));
+		close_fd(pos, exe);
+		close_fd(pos + 1, exe);
 		try_path(command, shell);
 	}
 	g_sig = 1;
+	close_fd(pos, exe);
 	waitpid(-1, &shell->last_code, 0);
 	g_sig = 0;
-	return (0);
+	return (1);
 }

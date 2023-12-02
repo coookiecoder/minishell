@@ -75,7 +75,7 @@ int	execution_subparse(t_exec *exe, char *raw, t__exp *e, int *toggle)
 	if (raw[e->x] == '|' && e->quote != SINGLE_QUOTE && raw[e->x + 1])
 	{
 		if (*toggle)
-			return (write(1, ERR_PARSE_SYNTAX, ERR_PARSE_SYNTAX_N), 0);
+			return (write(2, ERR_PARSE_SYNTAX, ERR_PARSE_SYNTAX_N), 0);
 		*toggle = 1;
 		e->x++;
 	}
@@ -84,7 +84,7 @@ int	execution_subparse(t_exec *exe, char *raw, t__exp *e, int *toggle)
 		exe->cmds[e->y]->raw = \
 			ft_strndup(&raw[e->x], ft_strclen(&raw[e->x], '|'));
 		if (!exe->cmds[e->y++])
-			return (write(1, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
+			return (write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
 		*toggle = 0;
 		e->x += ft_strclen(&raw[e->x], '|');
 	}

@@ -27,6 +27,15 @@
 # define SHELL_PROMPT "UwU-Shell $> "
 # define SHELL_PROMPT_N 13
 
+# define ERR_UNKNOWN_CMD "bash: command not found\n"
+# define ERR_UNKNOWN_CMD_N 24
+
+# define ERR_PIPES_FILE "bash: No such file or directory\n"
+# define ERR_PIPES_FILE_N 32
+
+# define ERR_PIPES_FAIL "bash: failure to open new FDs\n"
+# define ERR_PIPES_FAIL_N 30
+
 # define ERR_PARSE_MEMORY "bash: memory allocation failed\n"
 # define ERR_PARSE_MEMORY_N 31
 
@@ -58,16 +67,16 @@ typedef struct s_command {
 	char		*raw;
 	char		bin[PATH_MAX];
 	int			argc;
+	int 		fd_in;
+	int			fd_out;
 	char		**argv;
 }	t_command;
 
 typedef struct s_execute {
 	size_t		total;
 	t_command	**cmds;
-	int			in_fd;
-	int			in_at;
-	int			out_fd;
-	int			out_at;
+	int			fds_odd[2];
+	int			fds_even[2];
 }	t_exec;
 
 // builtin/cd.c
@@ -128,6 +137,16 @@ void	init_command(t_command *command);
 int		raw_parse(t_shell *sh, char *raw);
 void	assign_quote_value(enum e_quotetype *v, char c);
 char	*expension(t_shell *sh, char *raw);
+
+// core/piping.c
+
+int		next_pipe(t_exec *exe);
+void	dup_pipes(t_exec *exe, size_t pos);
+
+void	new_pipe(size_t pos, t_exec *exec);
+void	duplicate_input(size_t pos, t_exec *exe);
+void	duplicate_output(size_t pos, t_exec *exe);
+void	close_fd(size_t pos, t_exec *exe);
 
 // utlis/strncmp.c
 
