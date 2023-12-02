@@ -53,50 +53,44 @@ int	find_argv_number(char *buffer, int *argv_cursor)
 static
 int	arg_len(char *buffer)
 {
-	int	len;
+	enum e_quotetype	quote;
+	int					len;
 
 	len = 0;
-	if (*buffer == '"')
+	while (*(buffer + len))
 	{
+		assign_quote_value(&quote, *(buffer + len));
+		if (!quote && *(buffer + len) == ' ')
+			break ;
 		len++;
-		while (*(buffer + len) && *(buffer + len) != '"')
-			len++;
 	}
-	else if (*buffer == '\'')
-	{
-		len++;
-		while (*(buffer + len) && *(buffer + len) != '\'')
-			len++;
-	}
-	else
-		while (*(buffer + len) && *(buffer + len) != ' ')
-			len++;
 	return (len);
 }
 
 static
 void	putargv(char *argv, char *buffer, int *cursor_main)
 {
-	char	delimiter;
-	int		cursor;
+	enum e_quotetype	old;
+	enum e_quotetype	quote;
+	int					cursor;
 
+	quote = 0;
 	cursor = 0;
-	delimiter = *(buffer + cursor++);
-	if (delimiter != '"' && delimiter != '\'')
+	while (*(buffer))
 	{
-		delimiter = ' ';
-		cursor--;
-	}
-	while (*(buffer + cursor) && *(buffer + cursor) != delimiter)
-	{
-		*(argv + cursor) = *(buffer + cursor);
-		cursor++;
+		old = quote;
+		assign_quote_value(&quote, *(buffer));
+		if (!quote && *(buffer) == ' ')
+			break ;
+		if (*(buffer) != (char) quote && *(buffer) != (char) old)
+			*(argv + cursor++) = *(buffer);
+		buffer++;
 		(*cursor_main)++;
 	}
 	*(argv + cursor) = '\0';
-	while (*(buffer + cursor) == ' ')
+	while (*(buffer) == ' ')
 	{
-		cursor++;
+		buffer++;
 		(*cursor_main)++;
 	}
 }

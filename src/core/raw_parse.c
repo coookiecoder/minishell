@@ -68,8 +68,10 @@ int	cmd_parse(t_shell *sh, t_command *cmd, t_exec *exe, size_t pos)
 	if (!parsed)
 		return (write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
 	parsed = redirection_handler(parsed, cmd);
+	if (g_sig == EXIT)
+		return (free(parsed), g_sig = NORMAL, 0);
 	if (!parsed)
-		return (write(2, ERR_PIPES_FILE, ERR_PIPES_FILE_N), 0);
+		return (free(parsed), write(2, ERR_PIPES_FILE, ERR_PIPES_FILE_N), 0);
 	format_command(parsed, cmd);
 	*(cmd->argv) = malloc(PATH_MAX);
 	if (!*(cmd->argv))

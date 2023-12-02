@@ -13,15 +13,14 @@
 #include "minishell.h"
 #include <readline/history.h>
 
-int		g_sig;
-void	signal_handler(int sig);
+enum e_sighandle	g_sig;
 
 int	main(int argc, char **argv, const char **envp)
 {
 	char		*buffer;
 	t_shell		shell;
 
-	g_sig = 0;
+	g_sig = NORMAL;
 	shell = (t_shell){0, NULL};
 	load_env(&shell, envp);
 	signal(SIGINT, signal_handler);

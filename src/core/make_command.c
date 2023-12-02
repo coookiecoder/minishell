@@ -68,20 +68,21 @@ void	try_path(t_command command, t_shell *shell)
 {
 	char	buffer[PATH_MAX];
 	char	*path;
-	int		cursor;
+	int		crs;
 
-	cursor = 0;
-	while (ft_strncmp(*(shell->env + cursor), "PATH=", 5))
-		cursor++;
-	path = *(shell->env + cursor);
-	cursor = 0;
-	while (*(path + cursor))
+	crs = 0;
+	while (*(shell->env + crs) && ft_strncmp(*(shell->env + crs), "PATH=", 5))
+		crs++;
+	path = *(shell->env + crs);
+	crs = 0;
+	execve(command.bin, command.argv, shell->env);
+	while (path && *(path + crs))
 	{
-		if (*(path + cursor) == ':')
+		if (*(path + crs) == ':')
 			if (try_bin(buffer, command, shell) != -1)
 				return ;
-		*(buffer + cursor) = *(path + cursor);
-		cursor++;
+		*(buffer + crs) = *(path + crs);
+		crs++;
 	}
 	write(2, ERR_UNKNOWN_CMD, ERR_UNKNOWN_CMD_N);
 	if (command.fd_in)
@@ -95,6 +96,8 @@ int	make_command(t_command command, t_shell *shell, t_exec *exe, size_t pos)
 {
 	pid_t	pid;
 
+	if (exe->total == 1 && builtin(command))
+		return (do_builtin(command, shell));
 	new_pipe(pos, exe);
 	pid = fork();
 	if (!pid)
@@ -111,9 +114,9 @@ int	make_command(t_command command, t_shell *shell, t_exec *exe, size_t pos)
 		close_fd(pos + 1, exe);
 		try_path(command, shell);
 	}
-	g_sig = 1;
+	g_sig = EXECUTION;
 	close_fd(pos, exe);
 	waitpid(-1, &shell->last_code, 0);
-	g_sig = 0;
+	g_sig = NORMAL;
 	return (1);
 }

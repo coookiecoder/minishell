@@ -57,30 +57,49 @@ int	open_target(const char *target, int *fd, int mode)
 }
 
 static
+void	edit(const char *eof, int out)
+{
+	pid_t	pid;
+	char	*input;
+
+	g_sig = EDITMODE;
+	pid = fork();
+	if (!pid)
+	{
+		signal(SIGINT, signal_breakout);
+		signal(SIGQUIT, signal_breakout);
+		while (1)
+		{
+			input = readline("> ");
+			if (!input)
+				write(1, WARN_PIPES_TEMP, WARN_PIPES_TEMP_N);
+			if (!input || !ft_strncmp(input, eof, ft_strlen(eof) + 1))
+				break ;
+			write(out, input, ft_strlen(input));
+			write(out, "\n", 1);
+			free(input);
+		}
+		g_sig = NORMAL;
+		exit(0);
+	}
+	waitpid(-1, NULL, 0);
+	return ;
+}
+
+static
 int	editor_mode(const char *eof, int *fd)
 {
 	char	*tmp;
-	char	*input;
 	int		skipped;
 
 	skipped = 0;
-	tmp = get_entry(eof, &skipped);
+	tmp = ft_strjoin(get_entry(eof, &skipped), "", LEFT, 1);
 	if (!tmp)
 		return (-100);
 	*fd = open("/tmp/.msdump", WF | O_TRUNC, 0755);
 	if (*fd < 0)
 		return (free(tmp), -100);
-	input = get_next_line(0);
-	while (input)
-	{
-		printf("EOF:   [%s]\nINPUT: [%s]\n", tmp, input);
-		if (!ft_strncmp(input, tmp, ft_strlen(tmp)))
-			break ;
-		write(*fd, input, ft_strlen(input));
-		free(input);
-		input = get_next_line(0);
-	}
-	free(input);
+	edit(tmp, *fd);
 	close(*fd);
 	*fd = open("/tmp/.msdump", O_RDONLY);
 	if (*fd < 0)

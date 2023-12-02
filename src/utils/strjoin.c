@@ -31,9 +31,9 @@ char	*ft_strjoin(char *string_a, char *string_b, int mode, size_t n)
 	while (*(string_b + cursor_string) && cursor_string < n)
 		*(result + cursor++) = *(string_b + cursor_string++);
 	*(result + cursor) = 0;
-	if (mode == 1 || mode == 3)
+	if (mode == LEFT || mode == BOTH)
 		free(string_a);
-	if (mode == 2 || mode == 3)
+	if (mode == RIGHT || mode == BOTH)
 		free(string_b);
 	return (result);
 }

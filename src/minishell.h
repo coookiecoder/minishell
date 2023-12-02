@@ -33,8 +33,8 @@
 # define ERR_PIPES_FILE "bash: No such file or directory\n"
 # define ERR_PIPES_FILE_N 32
 
-# define ERR_PIPES_TEMP "bash: failure to store temporary input\n"
-# define ERR_PIPES_TEMP_N 39
+# define WARN_PIPES_TEMP "bash: warning: here-document delimited by EOF\n"
+# define WARN_PIPES_TEMP_N 46
 
 # define ERR_PIPES_FAIL "bash: failure to open new FDs\n"
 # define ERR_PIPES_FAIL_N 30
@@ -45,15 +45,17 @@
 # define ERR_PARSE_SYNTAX "bash: syntax error\n"
 # define ERR_PARSE_SYNTAX_N 19
 
-# define BUFFER_SIZE 1000
-
-// Used for handling SIGNALs while running execve and forks tasks
-extern int	g_sig;
+enum e_sighandle {
+	NORMAL = 0,
+	EXECUTION,
+	EDITMODE,
+	EXIT
+};
 
 enum e_quotetype {
 	NO_QUOTE = 0,
-	SINGLE_QUOTE,
-	DOUBLE_QUOTE
+	SINGLE_QUOTE = '\'',
+	DOUBLE_QUOTE = '\"'
 };
 
 enum e_target {
@@ -62,6 +64,9 @@ enum e_target {
 	RIGHT,
 	BOTH
 };
+
+// Used for handling SIGNALs while running execve and forks tasks
+extern enum e_sighandle	g_sig;
 
 typedef struct s_shell {
 	int		last_code;
@@ -150,6 +155,11 @@ void	duplicate_input(size_t pos, t_exec *exe);
 void	duplicate_output(size_t pos, t_exec *exe);
 void	close_fd(size_t pos, t_exec *exe);
 
+// core/signal.c
+
+void	signal_handler(int sig);
+void	signal_breakout(int sig);
+
 // core/redirects.c
 
 char	*redirection_handler(char *raw, t_command *cmd);
@@ -181,15 +191,6 @@ char	*ft_strjoin(char *string_a, char *string_b, int mode, size_t n);
 
 int		ft_is_space(char c);
 int		is_empty(const char *buffer);
-
-// utils/get_next_line.c
-
-char	*get_next_line(int fd);
-
-// util/get_next_line_utils.c
-
-char	*ft_strchr(char *s, char c);
-char	*get_from_buffer(char buffer[BUFFER_SIZE + 1], char *result);
 
 // === NORME ABUSE BE LIKE === //
 typedef struct s__exp {

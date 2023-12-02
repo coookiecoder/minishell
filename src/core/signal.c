@@ -38,8 +38,29 @@ void	ctrl_s(void)
 
 void	signal_handler(int sig)
 {
+	if (g_sig == EDITMODE || g_sig == EXIT)
+	{
+		if (sig == SIGINT)
+			g_sig = EXIT;
+		return ;
+	}
 	if (sig == SIGINT)
 		ctrl_c();
 	else if (sig == SIGQUIT)
 		ctrl_s();
+}
+
+void	signal_breakout(int sig)
+{
+	if (sig == SIGINT)
+	{
+		write(1, "\n", 1);
+		exit(1);
+	}
+	else if (sig == SIGQUIT)
+	{
+		write(0, "\033[D\033[D\033[K", 9);
+		rl_on_new_line();
+		rl_redisplay();
+	}
 }
