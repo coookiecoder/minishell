@@ -90,6 +90,11 @@ typedef struct s_execute {
 	int			fds_even[2];
 }	t_exec;
 
+// builtin/builtins.c
+
+int		builtin(t_command *command);
+int		do_builtin(t_command *command, t_shell *shell);
+
 // builtin/cd.c
 
 int		cd(int argc, char **argv, t_shell *shell);

@@ -12,40 +12,6 @@
 
 #include "minishell.h"
 
-int	builtin(t_command command)
-{
-	if (!strncmp(command.bin, "pwd", 4))
-		return (1);
-	else if (!strncmp(command.bin, "cd", 3))
-		return (1);
-	else if (!strncmp(command.bin, "echo", 5))
-		return (1);
-	else if (!strncmp(command.bin, "env", 4))
-		return (1);
-	else if (!strncmp(command.bin, "export", 7))
-		return (1);
-	else if (!strncmp(command.bin, "unset", 6))
-		return (1);
-	return (0);
-}
-
-int	do_builtin(t_command command, t_shell *shell)
-{
-	if (!strncmp(command.bin, "pwd", 4))
-		return (pwd());
-	else if (!strncmp(command.bin, "cd", 3))
-		return (cd(command.argc, command.argv, shell));
-	else if (!strncmp(command.bin, "echo", 5))
-		return (echo(command.argc, command.argv));
-	else if (!strncmp(command.bin, "env", 4))
-		return (env(shell));
-	else if (!strncmp(command.bin, "export", 7))
-		return (ft_export(shell, command));
-	else if (!strncmp(command.bin, "unset", 6))
-		return (unset_env(shell, command));
-	return (0);
-}
-
 int	try_bin(char *path_to_bin, t_command command, t_shell *shell)
 {
 	int	last_section;
@@ -92,12 +58,28 @@ void	try_path(t_command command, t_shell *shell)
 	exit(127);
 }
 
+static
+int	singleton(t_command *cmd, t_shell *sh)
+{
+	int		tmp;
+	int		ret;
+
+	if (cmd->fd_out < 0)
+		return (do_builtin(cmd, sh));
+	tmp = dup(STDOUT_FILENO);
+	dup2(cmd->fd_out, STDOUT_FILENO);
+	ret = do_builtin(cmd, sh);
+	dup2(tmp, STDOUT_FILENO);
+	close(tmp);
+	return (ret);
+}
+
 int	make_command(t_command command, t_shell *shell, t_exec *exe, size_t pos)
 {
 	pid_t	pid;
 
-	if (exe->total == 1 && builtin(command))
-		return (do_builtin(command, shell));
+	if (exe->total == 1 && builtin(&command))
+		return (singleton(&command, shell));
 	new_pipe(pos, exe);
 	pid = fork();
 	if (!pid)
@@ -108,8 +90,8 @@ int	make_command(t_command command, t_shell *shell, t_exec *exe, size_t pos)
 			dup2(command.fd_in, STDIN_FILENO);
 		if (command.fd_out)
 			dup2(command.fd_out, STDOUT_FILENO);
-		if (builtin(command))
-			exit(do_builtin(command, shell));
+		if (builtin(&command))
+			exit(do_builtin(&command, shell));
 		close_fd(pos, exe);
 		close_fd(pos + 1, exe);
 		try_path(command, shell);

@@ -24,8 +24,9 @@ char	*get_entry(const char *target, int *skipped)
 	while (*(target + *skipped))
 	{
 		assign_quote_value(&e.quote, *(target + *skipped));
-		if (!e.quote && *(target + (*skipped)++) == ' ')
+		if (!e.quote && *(target + *skipped) == ' ')
 			break ;
+		(*skipped)++;
 		e.x++;
 	}
 	e.tmp = malloc(e.x + 1);
@@ -53,6 +54,9 @@ int	open_target(const char *target, int *fd, int mode)
 	*fd = open(tmp, mode, 0755);
 	if (*fd < 0)
 		return (free(tmp), -100);
+	while (target[skipped] == ' ' \
+		|| (target[skipped] >= '\t' && target[skipped] <= '\r'))
+		skipped++;
 	return (free(tmp), skipped);
 }
 
@@ -104,6 +108,9 @@ int	editor_mode(const char *eof, int *fd)
 	*fd = open("/tmp/.msdump", O_RDONLY);
 	if (*fd < 0)
 		return (free(tmp), -100);
+	while (eof[skipped] == ' ' \
+		|| (eof[skipped] >= '\t' && eof[skipped] <= '\r'))
+		skipped++;
 	return (free(tmp), skipped);
 }
 
