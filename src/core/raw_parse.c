@@ -96,8 +96,6 @@ int	raw_parse(t_shell *sh, char *raw)
 	exe = (t_exec){0, NULL, {-1, -1}, {-1, -1}};
 	if (!token_parse(&exe, raw))
 		return (ft_freeexec(&exe), 0);
-	for (int i = 0; exe.cmds[i]; i++)
-		printf("CMD: [%s]\n", exe.cmds[i]->raw);
 	i = 0;
 	while (i < exe.total)
 	{
