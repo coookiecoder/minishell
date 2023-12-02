@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <unistd.h>
 
 int	builtin(t_command command)
 {
@@ -85,6 +84,10 @@ void	try_path(t_command command, t_shell *shell)
 		cursor++;
 	}
 	write(2, ERR_UNKNOWN_CMD, ERR_UNKNOWN_CMD_N);
+	if (command.fd_in)
+		close(command.fd_in);
+	if (command.fd_out)
+		close(command.fd_out);
 	exit(1);
 }
 

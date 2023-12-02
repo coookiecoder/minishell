@@ -20,11 +20,7 @@ void	init_command(t_command *command)
 	int	cursor;
 
 	cursor = 0;
-	command->raw = NULL;
-	command->argv = NULL;
-	command->argc = 1;
-	command->fd_in = -1;
-	command->fd_out = -1;
+	*command = (t_command){NULL, {'\0'}, 0, NULL, -1, -1};
 	while (cursor < PATH_MAX)
 		*(command->bin + cursor++) = '\0';
 }
@@ -70,11 +66,10 @@ int	cmd_parse(t_shell *sh, t_command *cmd, t_exec *exe, size_t pos)
 
 	parsed = expension(sh, cmd->raw);
 	if (!parsed)
-		return (write(2, ERR_PARSE_MEMORY, E
-	exe.fds_odd[0] = -1;
-	exe.fds_odd[1] = -1;
-	exe.fds_even[0] = -1;
-	exe.fds_even[1] = -1;RR_PARSE_MEMORY_N), 0);
+		return (write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
+	parsed = redirection_handler(parsed, cmd);
+	if (!parsed)
+		return (write(2, ERR_PIPES_FILE, ERR_PIPES_FILE_N), 0);
 	format_command(parsed, cmd);
 	*(cmd->argv) = malloc(PATH_MAX);
 	if (!*(cmd->argv))

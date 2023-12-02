@@ -18,11 +18,11 @@
 # include <errno.h>
 # include <limits.h>
 # include <stdio.h>
+# include <fcntl.h>
+# include <sys/wait.h>
 
 # include <readline/readline.h>
 # include <readline/history.h>
-
-# include <sys/wait.h>
 
 # define SHELL_PROMPT "UwU-Shell $> "
 # define SHELL_PROMPT_N 13
@@ -33,6 +33,9 @@
 # define ERR_PIPES_FILE "bash: No such file or directory\n"
 # define ERR_PIPES_FILE_N 32
 
+# define ERR_PIPES_TEMP "bash: failure to store temporary input\n"
+# define ERR_PIPES_TEMP_N 39
+
 # define ERR_PIPES_FAIL "bash: failure to open new FDs\n"
 # define ERR_PIPES_FAIL_N 30
 
@@ -41,6 +44,8 @@
 
 # define ERR_PARSE_SYNTAX "bash: syntax error\n"
 # define ERR_PARSE_SYNTAX_N 19
+
+# define BUFFER_SIZE 1000
 
 // Used for handling SIGNALs while running execve and forks tasks
 extern int	g_sig;
@@ -67,9 +72,9 @@ typedef struct s_command {
 	char		*raw;
 	char		bin[PATH_MAX];
 	int			argc;
-	int 		fd_in;
-	int			fd_out;
 	char		**argv;
+	int			fd_in;
+	int			fd_out;
 }	t_command;
 
 typedef struct s_execute {
@@ -140,13 +145,14 @@ char	*expension(t_shell *sh, char *raw);
 
 // core/piping.c
 
-int		next_pipe(t_exec *exe);
-void	dup_pipes(t_exec *exe, size_t pos);
-
 void	new_pipe(size_t pos, t_exec *exec);
 void	duplicate_input(size_t pos, t_exec *exe);
 void	duplicate_output(size_t pos, t_exec *exe);
 void	close_fd(size_t pos, t_exec *exe);
+
+// core/redirects.c
+
+char	*redirection_handler(char *raw, t_command *cmd);
 
 // utlis/strncmp.c
 
@@ -175,6 +181,15 @@ char	*ft_strjoin(char *string_a, char *string_b, int mode, size_t n);
 
 int		ft_is_space(char c);
 int		is_empty(const char *buffer);
+
+// utils/get_next_line.c
+
+char	*get_next_line(int fd);
+
+// util/get_next_line_utils.c
+
+char	*ft_strchr(char *s, char c);
+char	*get_from_buffer(char buffer[BUFFER_SIZE + 1], char *result);
 
 // === NORME ABUSE BE LIKE === //
 typedef struct s__exp {
