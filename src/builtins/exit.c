@@ -27,6 +27,8 @@ int	convert_code(char *code)
 	int	code_int;
 	int	cursor;
 
+	if (!code)
+		return (0);
 	cursor = 0;
 	while (is_allowed(*(code + cursor)))
 		cursor++;
@@ -34,13 +36,12 @@ int	convert_code(char *code)
 		code_int = atolli(code);
 	else
 		code_int = -1;
-	write(1, "exit\n", 5);
 	if (code_int == -1)
 	{
 		write(1, "bash: exit: ", 13);
 		write(1, code, ft_strlen(code));
 		write(1, ": numeric argument required\n", 29);
-		code_int = 0;
+		code_int = 2;
 	}
 	return (code_int);
 }

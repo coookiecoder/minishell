@@ -69,6 +69,7 @@ enum e_target {
 extern enum e_sighandle	g_sig;
 
 typedef struct s_shell {
+	int		exit;
 	int		last_code;
 	char	**env;
 }	t_shell;

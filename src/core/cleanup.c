@@ -60,13 +60,6 @@ void	ft_freeexec(t_exec *exe)
 
 int	ft_exit(char *buffer, t_shell *shell, t_command *command)
 {
-	int	code;
-
-	if (command && command->argc > 1 && buffer)
-	{
-		code = convert_code(*(command->argv + 1));
-		return (ft_free(buffer, shell, command), code);
-	}
 	write(1, "exit\n", 5);
 	return (ft_free(buffer, shell, command), 0);
 }
