@@ -89,7 +89,7 @@ void	try_path(t_command command, t_shell *shell)
 		close(command.fd_in);
 	if (command.fd_out)
 		close(command.fd_out);
-	exit(1);
+	exit(127);
 }
 
 int	make_command(t_command command, t_shell *shell, t_exec *exe, size_t pos)
@@ -116,7 +116,8 @@ int	make_command(t_command command, t_shell *shell, t_exec *exe, size_t pos)
 	}
 	g_sig = EXECUTION;
 	close_fd(pos, exe);
-	waitpid(-1, &shell->last_code, 0);
+	waitpid(pid, &shell->last_code, 0);
+	shell->last_code = (((shell->last_code) & 0xff00) >> 8);
 	g_sig = NORMAL;
 	return (1);
 }

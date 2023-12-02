@@ -22,7 +22,7 @@ int	apply_expension(t_shell *sh, char **base, char *raw)
 	len = 0;
 	if (raw && raw[len] == '?')
 	{
-		*base = ft_strjoin(*base, ft_itoa(sh->last_code), BOTH, -1);
+		*base = ft_strjoin(*base, ft_itoa((char) sh->last_code), BOTH, -1);
 		return (2);
 	}
 	while (raw && raw[len] && (raw[len] == '_' \
@@ -60,18 +60,25 @@ char	*expension(t_shell *sh, char *raw)
 
 size_t	pipe_counter(char *raw)
 {
-	size_t	c;
+	enum e_quotetype	quote;
+	size_t				c;
 
 	c = 0;
 	while (raw && *raw)
-		if (*(raw++) == '|')
+	{
+		assign_quote_value(&quote, *raw);
+		if (*(raw++) == '|' && quote == NO_QUOTE)
 			c++;
+	}
+	printf("PIPES: [%zu]\n", c);
 	return (c);
 }
 
 static
 int	execution_subparse(t_exec *exe, char *raw, t__exp *e, int *toggle)
 {
+	int		len;
+
 	if (raw[e->x] == '|' && e->quote != SINGLE_QUOTE && raw[e->x + 1])
 	{
 		if (*toggle)
@@ -81,12 +88,15 @@ int	execution_subparse(t_exec *exe, char *raw, t__exp *e, int *toggle)
 	}
 	else
 	{
-		exe->cmds[e->y]->raw = \
-			ft_strndup(&raw[e->x], ft_strclen(&raw[e->x], '|'));
+		len = 0;
+		while (raw && raw[e->x + len] && (raw[e->x + len] != '|' \
+			|| raw[e->x + len] != '\'' || raw[e->x + len] != '\"'))
+			len++;
+		exe->cmds[e->y]->raw = ft_strndup(&raw[e->x], len);
 		if (!exe->cmds[e->y++])
 			return (write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
 		*toggle = 0;
-		e->x += ft_strclen(&raw[e->x], '|');
+		e->x += len;
 	}
 	return (1);
 }

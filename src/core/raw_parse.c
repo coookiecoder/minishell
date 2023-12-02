@@ -82,7 +82,8 @@ int	cmd_parse(t_shell *sh, t_command *cmd, t_exec *exe, size_t pos)
 		return (free(parsed), \
 			write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
 	if (!strncmp(cmd->bin, "exit", 5))
-		return (free(parsed), sh->exit = convert_code(cmd->argv[1]), 1);
+		return (free(parsed), sh->exit = convert_code(cmd->argv[1]), \
+			exe->total == 1);
 	make_command(*cmd, sh, exe, pos);
 	return (free(parsed), 0);
 }
@@ -95,6 +96,8 @@ int	raw_parse(t_shell *sh, char *raw)
 	exe = (t_exec){0, NULL, {-1, -1}, {-1, -1}};
 	if (!token_parse(&exe, raw))
 		return (ft_freeexec(&exe), 0);
+	for (int i = 0; exe.cmds[i]; i++)
+		printf("CMD: [%s]\n", exe.cmds[i]->raw);
 	i = 0;
 	while (i < exe.total)
 	{
