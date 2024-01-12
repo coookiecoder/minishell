@@ -6,11 +6,35 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:46:09 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 09:46:12 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/12 11:47:17 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	cmd_exec(t_shell *sh, t_exec *exe)
+{
+	size_t	i;
+
+	sh->pids = malloc(sizeof(pid_t) * (exe->total + 1));
+	if (!sh->pids)
+		return (0);
+	i = 0;
+	g_sig = EXECUTION;
+	while (i < exe->total)
+	{
+		sh->pids[i] = 0;
+		if (!strncmp(exe->cmds[i]->bin, "exit", 5))
+		{
+			sh->exit = convert_code(exe->cmds[i]);
+			return (exe->total == 1);
+		}
+		make_command(*(exe->cmds[i]), sh, exe, i);
+		i++;
+	}
+	sh->pids[i] = 0;
+	return (0);
+}
 
 int	try_bin(char *path_to_bin, t_command command, t_shell *shell)
 {
@@ -97,9 +121,7 @@ int	make_command(t_command command, t_shell *shell, t_exec *exe, size_t pos)
 		close_fd(pos + 1, exe);
 		try_path(command, shell);
 	}
-	g_sig = EXECUTION;
 	close_fd(pos, exe);
-	waitpid(pid, &shell->last_code, 0);
-	g_sig = NORMAL;
+	shell->pids[pos] = pid;
 	return (1);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                                            */
-/*   NOOT NOOT MOTHER FUCKER                      :#:  :#:         :#:  :#:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                :#:  :#::#     #::#:  :#:   */
 /*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
 /*                                                :##::##: :#:#:#: :##::##:   */
 /*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: the-day-it-was updated by UwU                                   */
+/*   Updated: 2024/01/12 11:11:41 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_shell {
 	int		exit;
 	int		last_code;
 	char	**env;
+	pid_t	*pids;
 }	t_shell;
 
 typedef struct s_command {
@@ -139,6 +140,7 @@ void	format_command(char *buffer, t_command *command);
 
 int		make_command(
 			t_command command, t_shell *shell, t_exec *exe, size_t pos);
+int		cmd_exec(t_shell *sh, t_exec *exe);
 
 // core/cleanup.c
 

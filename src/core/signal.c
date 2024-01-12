@@ -6,7 +6,7 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:47:04 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 09:47:06 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/12 11:48:48 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,11 @@ void	ctrl_s(void)
 
 void	signal_handler(int sig)
 {
+	if (g_sig == EXECUTION)
+	{
+		signal_breakout(sig);
+		return ;
+	}
 	if (g_sig == EDITMODE || g_sig == EXIT)
 	{
 		if (sig == SIGINT)
@@ -55,7 +60,6 @@ void	signal_breakout(int sig)
 	if (sig == SIGINT)
 	{
 		write(1, "\n", 1);
-		exit(1);
 	}
 	else if (sig == SIGQUIT)
 	{

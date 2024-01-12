@@ -6,7 +6,7 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:46:38 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 09:46:44 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/12 11:11:17 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,28 +59,23 @@ int	token_parse(t_exec *exe, char *raw)
 	return (execution_parse(exe, raw));
 }
 
-static
-int	cmd_parse(t_shell *sh, t_command *cmd, t_exec *exe, size_t pos)
+int	cmd_parse(t_shell *sh, t_command *cmd)
 {
 	char	*parsed;
 
 	parsed = expension(sh, cmd->raw);
 	if (!parsed)
-		return (write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
+		return (write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 1);
 	parsed = redirection_handler(parsed, cmd);
 	if (g_sig == EXIT)
-		return (free(parsed), g_sig = NORMAL, 0);
+		return (free(parsed), g_sig = NORMAL, 1);
 	if (!parsed)
-		return (free(parsed), write(2, ERR_PIPES_FILE, ERR_PIPES_FILE_N), 0);
+		return (free(parsed), write(2, ERR_PIPES_FILE, ERR_PIPES_FILE_N), 1);
 	format_command(parsed, cmd);
 	*(cmd->argv) = ft_strdup(cmd->bin);
 	if (!*(cmd->argv))
 		return (free(parsed), \
-			write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 0);
-	if (!strncmp(cmd->bin, "exit", 5))
-		return (free(parsed), sh->exit = convert_code(cmd), \
-			exe->total == 1);
-	make_command(*cmd, sh, exe, pos);
+			write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 1);
 	return (free(parsed), 0);
 }
 
@@ -88,6 +83,7 @@ int	raw_parse(t_shell *sh, char *raw)
 {
 	t_exec		exe;
 	size_t		i;
+	int			ret;
 
 	exe = (t_exec){0, NULL, {-1, -1}, {-1, -1}};
 	if (!token_parse(&exe, raw))
@@ -95,10 +91,11 @@ int	raw_parse(t_shell *sh, char *raw)
 	i = 0;
 	while (i < exe.total)
 	{
-		if (cmd_parse(sh, exe.cmds[i], &exe, i))
+		if (cmd_parse(sh, exe.cmds[i]))
 			return (ft_freeexec(&exe), 1);
 		i++;
 	}
+	ret = cmd_exec(sh, &exe);
 	ft_freeexec(&exe);
-	return (0);
+	return (ret);
 }
