@@ -6,7 +6,7 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:46:09 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 11:47:17 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/12 13:06:49 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,11 @@ int	singleton(t_command *cmd, t_shell *sh)
 	int		ret;
 
 	if (cmd->fd_out < 0)
-		return (do_builtin(cmd, sh));
+		return (sh->last_code = do_builtin(cmd, sh) << 8);
 	tmp = dup(STDOUT_FILENO);
 	dup2(cmd->fd_out, STDOUT_FILENO);
 	ret = do_builtin(cmd, sh);
+	sh->last_code = ret << 8;
 	dup2(tmp, STDOUT_FILENO);
 	close(tmp);
 	return (ret);
@@ -116,7 +117,7 @@ int	make_command(t_command command, t_shell *shell, t_exec *exe, size_t pos)
 		if (command.fd_out)
 			dup2(command.fd_out, STDOUT_FILENO);
 		if (builtin(&command))
-			exit(do_builtin(&command, shell));
+			exit(do_builtin(&command, shell) << 8);
 		close_fd(pos, exe);
 		close_fd(pos + 1, exe);
 		try_path(command, shell);

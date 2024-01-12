@@ -6,7 +6,7 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:48:45 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 09:48:47 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/12 12:38:04 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,7 @@ int	apply_expension(t_shell *sh, char **base, char *raw)
 	len = 0;
 	if (raw && raw[len] == '?')
 	{
-		*base = ft_strjoin(*base, \
-			ft_itoa((char)(((sh->last_code) & 0xff00) >> 8)), BOTH, -1);
+		*base = ft_strjoin(*base, ft_itoa(sh->last_code), BOTH, -1);
 		return (2);
 	}
 	while (raw && raw[len] && (raw[len] == '_' \

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                                            */
+/*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                :#:  :#::#     #::#:  :#:   */
-/*   By: an asshole who like to break thing       :#:  :#::#: # :#::#:  :#:   */
-/*                                                :##::##: :#:#:#: :##::##:   */
-/*   Created: the-day-it-was created by UwU        :####:  :##:##:  :####:    */
-/*   Updated: 2024/01/12 11:11:41 by abareux          ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abareux <abareux@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/12 12:03:56 by abareux           #+#    #+#             */
+/*   Updated: 2024/01/12 12:30:53 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ enum e_sighandle {
 	NORMAL = 0,
 	EXECUTION,
 	EDITMODE,
-	EXIT
+	EXIT,
+	HANDLED,
 };
 
 enum e_quotetype {
@@ -167,6 +168,7 @@ void	close_fd(size_t pos, t_exec *exe);
 
 // core/signal.c
 
+void	set_code(int sig, t_shell *save);
 void	signal_handler(int sig);
 void	signal_breakout(int sig);
 
