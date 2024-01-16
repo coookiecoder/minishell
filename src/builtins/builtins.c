@@ -6,7 +6,7 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:44:28 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 09:44:33 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/16 15:25:26 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	builtin(t_command *command)
 int	do_builtin(t_command *command, t_shell *shell)
 {
 	if (!strncmp(command->bin, "pwd", 4))
-		return (pwd());
+		return (pwd(shell));
 	else if (!strncmp(command->bin, "cd", 3))
 		return (cd(command->argc, command->argv, shell));
 	else if (!strncmp(command->bin, "echo", 5))

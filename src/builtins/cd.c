@@ -6,11 +6,11 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:44:45 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 09:44:47 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/16 16:25:56 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static
 void	put_in_env(char **env, char *path)
@@ -37,17 +37,28 @@ void	put_in_env(char **env, char *path)
 }
 
 static
-int	set_pwd(t_shell *shell)
+char	*parse_path(t_shell *shell, char *command)
 {
-	char	path[PATH_MAX];
+	char	*old_path;
+
+	if (command[0] == '/')
+		return (parse_path_absolute(command));
+	old_path = get_env(shell, "PWD");
+	if (!old_path[1])
+		return (parse_path_absolute(command));
+	return (parse_path_relative(shell, command));
+}
+
+static
+int	set_pwd(t_shell *shell, char *command)
+{
 	int		cursor;
 
-	getcwd(path, PATH_MAX - 1);
 	cursor = 0;
 	while (*(shell->env + cursor))
 	{
 		if (!ft_strncmp(*(shell->env + cursor), "PWD=", 4))
-			put_in_env(shell->env + cursor, path);
+			put_in_env(shell->env + cursor, command);
 		cursor++;
 	}
 	return (0);
@@ -55,15 +66,14 @@ int	set_pwd(t_shell *shell)
 
 int	cd(int argc, char **argv, t_shell *shell)
 {
-	if (argc != 2)
-	{
-		if (argc > 2)
-			write(1, "bash: cd: too many arguments\n", 30);
-		else
-			write(1, "bash: cd: not enough arguments\n", 32);
-		return (1);
-	}
-	if (chdir(*(argv + 1)))
+	char	*buffer;
+
+	if (argc > 2)
+		return (write(1, "bash: cd: too many arguments\n", 30), 1);
+	else if (argc < 2)
+		return (write(1, "bash: cd: not enough arguments\n", 32), 1);
+	buffer = parse_path(shell, *(argv + 1));
+	if (chdir(buffer))
 	{
 		if (errno == EACCES)
 		{
@@ -79,5 +89,5 @@ int	cd(int argc, char **argv, t_shell *shell)
 		}
 		return (1);
 	}
-	return (set_pwd(shell));
+	return (set_pwd(shell, buffer));
 }

@@ -6,17 +6,17 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:45:18 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 09:45:20 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/16 15:26:50 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	pwd(void)
+int	pwd(t_shell *shell)
 {
-	char	path[PATH_MAX];
+	char	*path;
 
-	getcwd(path, PATH_MAX - 1);
+	path = get_env(shell, "PWD");
 	write(1, path, ft_strlen(path));
 	write(1, "\n", 1);
 	return (0);

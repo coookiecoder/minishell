@@ -6,7 +6,7 @@
 /*   By: abareux <abareux@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 12:03:56 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 12:30:53 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/16 15:44:22 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,11 @@ typedef struct s_execute {
 	int			fds_even[2];
 }	t_exec;
 
+typedef struct s_list {
+	void			*data;
+	struct s_list	*next;
+}	t_list;
+
 // builtin/builtins.c
 
 int		builtin(t_command *command);
@@ -103,7 +108,7 @@ int		cd(int argc, char **argv, t_shell *shell);
 
 // builtin/pwd.c
 
-int		pwd(void);
+int		pwd(t_shell *shell);
 
 // builtin/echo.c
 
@@ -203,6 +208,23 @@ char	*ft_strjoin(char *string_a, char *string_b, int mode, size_t n);
 
 int		ft_is_space(char c);
 int		is_empty(const char *buffer);
+
+// utlis/parse_path.c
+
+char	*parse_path_absolute(char *command);
+char	*parse_path_relative(t_shell *shell, char *command);
+
+// utils/list.c
+
+t_list	*create(char **data);
+t_list	*clear(t_list *list);
+void	pop(t_list *list);
+void	add(t_list **list, char *data);
+char	*join(t_list *list);
+
+// utils/split.c
+
+char	**ft_split(char const *s, char c);
 
 // === NORME ABUSE BE LIKE === //
 typedef struct s__exp {
