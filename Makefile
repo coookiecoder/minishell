@@ -10,7 +10,7 @@ SRC=$(foreach f, $(FILES), src/$(f).c)
 OBJ=$(foreach f, $(FILES), obj/$(f).o)
 
 CCFLAGS=-Isrc -Wall -Wextra -Werror -Wunreachable-code -Wpedantic -g3 -Wunreachable-code-aggressive
-LNFLAGS=-lreadline -g3
+LNFLAGS=-lreadline -g3 #-fsanitize=address
 
 all: $(NAME)
 

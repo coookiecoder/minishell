@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+	/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
@@ -31,7 +31,7 @@ void	put_in_env(char **env, char *path)
 		*(new_pwd + cursor + 4) = *(path + cursor);
 		cursor++;
 	}
-	*(new_pwd + cursor + 5) = '\0';
+	*(new_pwd + cursor + 4) = '\0';
 	free(*env);
 	*env = new_pwd;
 }
@@ -88,7 +88,7 @@ int	cd(int argc, char **argv, t_shell *shell)
 			write(1, *(argv + 1), ft_strlen(*(argv + 1)));
 			write(1, ": is not a directory\n", 22);
 		}
-		return (1);
+		return (free(buffer), 1);
 	}
 	return (set_pwd(shell, buffer));
 }

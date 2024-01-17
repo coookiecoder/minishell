@@ -77,6 +77,8 @@ void	putargv(char *argv, char *buffer, int *cursor_main)
 
 	quote = 0;
 	cursor = 0;
+	if (!argv)
+		return ;
 	while (*(buffer))
 	{
 		old = quote;
@@ -113,7 +115,7 @@ void	format_command(char *buffer, t_command *command)
 	if (command->argv)
 		clear_argv(command);
 	command->argc = find_argv_number(buffer + cursor, &argv_cursor) + 1;
-	command->argv = malloc(sizeof(char *) * (command->argc) + 1);
+	command->argv = malloc(sizeof(char *) * (command->argc + 1));
 	if (!command->argv)
 		return ;
 	while (argv_cursor < command->argc)
@@ -121,5 +123,5 @@ void	format_command(char *buffer, t_command *command)
 		*(command->argv + argv_cursor) = malloc(arg_len(buffer + cursor) + 1);
 		putargv(*(command->argv + argv_cursor++), buffer + cursor, &cursor);
 	}
-	*(command->argv + argv_cursor) = 0;
+	*(command->argv + command->argc) = NULL;
 }
