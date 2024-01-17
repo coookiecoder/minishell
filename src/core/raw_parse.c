@@ -6,7 +6,7 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:46:38 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 11:11:17 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/17 19:08:42 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int	raw_parse(t_shell *sh, char *raw)
 			exe.cmds[i]->bin[ret] = exe.cmds[i]->argv[0][ret];
 			ret++;
 		}
+		exe.cmds[i]->bin[ret] = exe.cmds[i]->argv[0][ret];
 		i++;
 	}
 	ret = cmd_exec(sh, &exe);
