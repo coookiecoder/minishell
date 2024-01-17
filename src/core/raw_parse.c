@@ -93,6 +93,13 @@ int	raw_parse(t_shell *sh, char *raw)
 	{
 		if (cmd_parse(sh, exe.cmds[i]))
 			return (ft_freeexec(&exe), 1);
+		exe.cmds[i]->argv[0] = purge_quote(exe.cmds[i]->argv[0]);
+		ret = 0;
+		while (ret < 4096)
+		{
+			exe.cmds[i]->bin[ret] = exe.cmds[i]->argv[0][ret];
+			ret++;
+		}
 		i++;
 	}
 	ret = cmd_exec(sh, &exe);

@@ -16,9 +16,11 @@ t_list	*create(char **data)
 {
 	t_list	*result;
 	t_list	*buffer;
+	char	**start;
 
 	if (!data)
 		return (0);
+	start = data;
 	result = malloc(sizeof(t_list));
 	buffer = result;
 	while (*data)
@@ -26,6 +28,7 @@ t_list	*create(char **data)
 		if (!buffer)
 			return (clear(result));
 		buffer->data = ft_strdup(*data);
+		free(*data);
 		data++;
 		if (*data)
 		{
@@ -34,7 +37,7 @@ t_list	*create(char **data)
 		}
 	}
 	buffer->next = 0;
-	return (result);
+	return (free(start), result);
 }
 
 t_list	*clear(t_list *list)
@@ -94,11 +97,13 @@ void	add(t_list **list, char *data)
 
 char	*join(t_list *list)
 {
+	t_list	*buffer;
 	char	*result;
 
 	result = NULL;
 	if (!list)
 		return (ft_strdup("/"));
+	buffer = list;
 	while (list)
 	{
 		if (!result)
@@ -113,6 +118,6 @@ char	*join(t_list *list)
 			return (0);
 		list = list->next;
 	}
-	clear(list);
+	clear(buffer);
 	return (result);
 }

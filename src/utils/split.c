@@ -13,90 +13,85 @@
 #include "../minishell.h"
 
 static
-int	ft_count(const char *s, char c)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
-	int	result;
-	int	not_separator;
+	size_t	i;
 
-	result = 0;
-	not_separator = 0;
-	while (*s)
+	i = 0;
+	while (src[i] && i < dstsize - 1 && dstsize > 0)
 	{
-		if (*s != c && not_separator == 0)
-		{
-			not_separator = 1;
-			result++;
-		}
-		else if (*s == c)
-			not_separator = 0;
-		s++;
+		dst[i] = src[i];
+		i++;
 	}
-	return (result);
+	dst[i] = '\0';
+	return (ft_strlen(src));
 }
 
 static
-char	*ft_copy(const char *s, int start, int finish)
+void	**ft_free_array(void **array, size_t n)
 {
-	char	*result;
-	int		cursor;
-
-	cursor = 0;
-	result = malloc((finish - start + 1) * sizeof(char));
-	if (!result)
-		return (0);
-	while (start < finish)
-		*(result + cursor++) = *(s + start++);
-	*(result + cursor) = '\0';
-	return (result);
-}
-
-static
-char	**ft_clear(char **tab)
-{
-	unsigned int	cursor;
-
-	cursor = 0;
-	while (*(tab + cursor))
-	{
-		free(*(tab + cursor));
-		cursor++;
-	}
-	free(tab);
+	while (n)
+		free(array[--n]);
+	free(array);
 	return (0);
 }
 
 static
-void	set_value(int *start, int *finish, int *word_cursor)
+size_t	ft_split_size(const char *s, char c)
 {
-	*start = -1;
-	*finish = 0;
-	*word_cursor = 0;
+	size_t	len;
+	size_t	i;
+
+	i = 0;
+	len = 0;
+	while (s[i++])
+	{
+		while (s[i] != c && s[i])
+			i++;
+		len++;
+		while (s[i] == c && s[i])
+			i++;
+	}
+	return (len);
 }
 
-char	**ft_split(char const *s, char c)
+static
+char	**ft_split2(const char *s, char c, char **res)
 {
-	char	**result;
-	int		start;
-	int		finish;
-	int		word_cursor;
+	size_t	len;
+	size_t	i;
+	size_t	y;
 
-	result = malloc((ft_count(s, c) + 1) * sizeof(char *));
-	if (!s || !result)
-		return (0);
-	set_value(&start, &finish, &word_cursor);
-	while (finish <= ft_strlen(s))
+	i = 0;
+	y = 0;
+	while (s[y])
 	{
-		if (*(s + finish) != c && start < 0)
-			start = finish;
-		else if ((*(s + finish) == c || finish == ft_strlen(s)) && start >= 0)
-		{
-			*(result + word_cursor) = ft_copy(s, start, finish);
-			if (!*(result + word_cursor++))
-				return (ft_clear(result));
-			start = -1;
-		}
-		finish++;
+		len = 0;
+		while (s[y] != c && s[y] && ++y)
+			len++;
+		res[i] = malloc(len + 1);
+		if (!res[i])
+			return ((char **) ft_free_array((void **) res, i));
+		ft_strlcpy(res[i++], &s[y - len], len + 1);
+		while (s[y] == c && s[y])
+			y++;
 	}
-	*(result + ft_count(s, c)) = 0;
-	return (result);
+	res[i] = 0;
+	return (res);
+}
+
+char	**ft_split(const char *s, char c)
+{
+	size_t	i;
+	char	**r;
+
+	if (!s)
+		return (0);
+	i = 0;
+	while (s[i] == c && s[i])
+		i++;
+	r = (char **)malloc(sizeof(char *) * (ft_split_size(&s[i], c) + 1));
+	if (!r)
+		return (0);
+	return (ft_split2(&s[i], c, r));
 }

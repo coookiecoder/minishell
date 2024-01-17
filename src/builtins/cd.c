@@ -44,7 +44,7 @@ char	*parse_path(t_shell *shell, char *command)
 	if (command[0] == '/')
 		return (parse_path_absolute(command));
 	old_path = get_env(shell, "PWD");
-	if (!old_path[1])
+	if (old_path && !old_path[1])
 		return (parse_path_absolute(command));
 	return (parse_path_relative(shell, command));
 }
@@ -61,6 +61,7 @@ int	set_pwd(t_shell *shell, char *command)
 			put_in_env(shell->env + cursor, command);
 		cursor++;
 	}
+	free(command);
 	return (0);
 }
 

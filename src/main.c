@@ -16,13 +16,13 @@
 
 enum e_sighandle	g_sig;
 
-void	ft_waitpid(t_shell *shell)
+int	ft_waitpid(t_shell *shell)
 {
 	int	cursor;
 	int	code;
 
 	if (!shell->pids)
-		return ;
+		return (1);
 	cursor = 0;
 	while (shell->pids[cursor])
 	{
@@ -32,6 +32,32 @@ void	ft_waitpid(t_shell *shell)
 	}
 	free(shell->pids);
 	g_sig = NORMAL;
+	return (1);
+}
+
+static
+int	inc_shlvl(t_shell *sh, const char **envp)
+{
+	char	*shlvl;
+	char	*tmp;
+	int		ret;
+
+	*sh = (t_shell){0, 0, NULL, NULL};
+	if (!load_env(sh, envp))
+		return (0);
+	shlvl = get_env(sh, "SHLVL");
+	if (!shlvl)
+		return (set_env(sh, "1"));
+	tmp = ft_itoa(atolli(shlvl) + 1);
+	if (!tmp)
+		return (0);
+	tmp = ft_strjoin("SHLVL=", tmp, RIGHT, -1);
+	if (!tmp)
+		return (0);
+	ret = set_env(sh, tmp);
+	free(tmp);
+	set_code(0, sh);
+	return (ret);
 }
 
 int	main(int argc, char **argv, const char **envp)
@@ -40,9 +66,8 @@ int	main(int argc, char **argv, const char **envp)
 	t_shell		shell;
 
 	g_sig = NORMAL;
-	shell = (t_shell){0, 0, NULL, NULL};
-	load_env(&shell, envp);
-	set_code(0, &shell);
+	if (!inc_shlvl(&shell, envp))
+		return (ft_exit(NULL, &shell, NULL), 1);
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, signal_handler);
 	while (argc || argv)

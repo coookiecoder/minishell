@@ -66,6 +66,7 @@ void	ft_freeexec(t_exec *exe)
 
 int	ft_exit(char *buffer, t_shell *shell, t_command *command)
 {
+	ft_waitpid(shell);
 	write(1, "exit\n", 5);
 	return (ft_free(buffer, shell, command), 0);
 }

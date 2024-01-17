@@ -97,6 +97,10 @@ typedef struct s_list {
 	struct s_list	*next;
 }	t_list;
 
+// main.c
+
+int		ft_waitpid(t_shell *shell);
+
 // builtin/builtins.c
 
 int		builtin(t_command *command);
