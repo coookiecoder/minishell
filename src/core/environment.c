@@ -88,7 +88,7 @@ char	*get_env(t_shell *sh, const char *name)
 	tmp = sh->env;
 	while (*tmp)
 	{
-		if (!ft_strncmp(*tmp, name, len))
+		if (!ft_strncmp(*tmp, name, len) && (*tmp)[len] == '=')
 			return (*tmp + len + 1);
 		tmp++;
 	}
