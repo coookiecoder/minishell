@@ -67,13 +67,29 @@ int	is_valid(const char *raw)
 	return (1);
 }
 
+static
+int	env2(t_shell *shell)
+{
+	int	cursor;
+
+	cursor = 0;
+	while (*(shell->env + cursor))
+	{
+		write(1, "declare -x ", 12);
+		write(1, *(shell->env + cursor), ft_strlen(*(shell->env + cursor)));
+		write(1, "\n", 1);
+		cursor++;
+	}
+	return (0);
+}
+
 int	ft_export(t_shell *sh, t_command cmd)
 {
 	int		c;
 	int		fails;
 
 	if (cmd.argc < 2)
-		return (0);
+		return (env2(sh));
 	c = 1;
 	fails = 0;
 	while (c < cmd.argc)
