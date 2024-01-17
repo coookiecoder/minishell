@@ -76,7 +76,11 @@ int	cmd_parse(t_shell *sh, t_command *cmd)
 	if (!*(cmd->argv))
 		return (free(parsed), \
 			write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 1);
-	return (free(parsed), 0);
+	free(parsed);
+	*(cmd->argv) = purge_quote(*(cmd->argv));
+	if (!*(cmd->argv))
+		return (write(2, ERR_PARSE_MEMORY, ERR_PARSE_MEMORY_N), 1);
+	return (0);
 }
 
 int	raw_parse(t_shell *sh, char *raw)
@@ -93,7 +97,6 @@ int	raw_parse(t_shell *sh, char *raw)
 	{
 		if (cmd_parse(sh, exe.cmds[i]))
 			return (ft_freeexec(&exe), 1);
-		exe.cmds[i]->argv[0] = purge_quote(exe.cmds[i]->argv[0]);
 		ret = 0;
 		while (ret < 4096)
 		{
