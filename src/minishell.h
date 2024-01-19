@@ -72,6 +72,7 @@ extern enum e_sighandle	g_sig;
 typedef struct s_shell {
 	int		exit;
 	int		last_code;
+	char	pwd[PATH_MAX + 1];
 	char	**env;
 	pid_t	*pids;
 }	t_shell;
@@ -229,6 +230,10 @@ char	*join(t_list *list);
 // utils/split.c
 
 char	**ft_split(char const *s, char c);
+
+// utlis/put_in_tab.c
+
+void	put_in_tab(char *destination, const char *source);
 
 // === NORME ABUSE BE LIKE === //
 typedef struct s__exp {

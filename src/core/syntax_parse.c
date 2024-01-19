@@ -48,6 +48,8 @@ int	apply_expension(t_shell *sh, char **base, char *raw)
 		*base = ft_strjoin(*base, ft_itoa(sh->last_code), BOTH, -1);
 		return (2);
 	}
+	if (raw && raw[len] == '$')
+		return (2);
 	while (raw && raw[len] && (raw[len] == '_' \
 		|| (raw[len] >= 'a' && raw[len] <= 'z') \
 		|| (raw[len] >= 'A' && raw[len] <= 'Z') \

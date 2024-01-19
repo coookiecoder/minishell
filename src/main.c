@@ -43,7 +43,7 @@ int	inc_shlvl(t_shell *sh, const char **envp)
 	char	*tmp;
 	int		ret;
 
-	*sh = (t_shell){0, 0, NULL, NULL};
+	*sh = (t_shell){0, 0, "", NULL, NULL};
 	if (!load_env(sh, envp))
 		return (0);
 	shlvl = get_env(sh, "SHLVL");
@@ -69,6 +69,7 @@ int	main(int argc, char **argv, const char **envp)
 	g_sig = NORMAL;
 	if (!inc_shlvl(&shell, envp))
 		return (ft_exit(NULL, &shell, NULL), 1);
+	getcwd(shell.pwd, PATH_MAX);
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, signal_handler);
 	while (argc || argv)

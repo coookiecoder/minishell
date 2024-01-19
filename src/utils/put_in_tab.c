@@ -1,23 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   put_in_tab.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: abareux <abareux@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/12 09:45:18 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/16 15:26:50 by abareux          ###   ########.fr       */
+/*   Created: 2024/01/19 15:27:11 by abareux           #+#    #+#             */
+/*   Updated: 2024/01/19 15:27:14 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-int	pwd(t_shell *shell)
+void	put_in_tab(char *destination, const char *source)
 {
-	char	*path;
-
-	path = shell->pwd;
-	write(1, path, ft_strlen(path));
-	write(1, "\n", 1);
-	return (0);
+	while (*source)
+		*destination++ = *source++;
+	*destination = *source;
 }

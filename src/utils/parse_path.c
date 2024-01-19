@@ -47,7 +47,7 @@ char	*parse_path_relative(t_shell *shell, char *command)
 	t_list	*element_command;
 	t_list	*element;
 
-	old_path = create(ft_split(get_env(shell, "PWD"), '/'));
+	old_path = create(ft_split(shell->pwd, '/'));
 	element_command = create(ft_split(command, '/'));
 	element = element_command;
 	while (element)
