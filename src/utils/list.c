@@ -6,7 +6,7 @@
 /*   By: abareux <abareux@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:18:23 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/16 15:58:16 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/23 16:27:06 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_list	*create(char **data)
 	t_list	*buffer;
 	char	**start;
 
-	if (!data)
+	if (!data || !*data)
 		return (0);
 	start = data;
 	result = malloc(sizeof(t_list));
