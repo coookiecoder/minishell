@@ -6,11 +6,11 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:48:45 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 12:38:04 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/25 15:38:30 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*purge_quote(char *str)
 {
@@ -55,6 +55,8 @@ int	apply_expension(t_shell *sh, char **base, char *raw)
 		|| (raw[len] >= 'A' && raw[len] <= 'Z') \
 		|| (raw[len] >= '0' && raw[len] <= '9')))
 		len++;
+	if (!len)
+		return (*base = ft_strjoin(*base, "$", LEFT, -1), 1);
 	env = ft_strndup(raw, len);
 	val = get_env(sh, env);
 	if (val)
