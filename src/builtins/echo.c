@@ -6,11 +6,11 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:44:52 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 09:44:54 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/26 16:02:24 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static
 int	check_n(char *arg)

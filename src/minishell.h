@@ -6,7 +6,7 @@
 /*   By: abareux <abareux@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 12:03:56 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/16 15:44:22 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/26 16:21:21 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ void	unload_env(t_shell *sh);
 
 // core/format_command.c
 
-void	format_command(char *buffer, t_command *command);
+void	format_command(char *buffer, t_command *command, enum e_quotetype qte);
 
 // core/make_command.c
 
@@ -234,6 +234,10 @@ char	**ft_split(char const *s, char c);
 // utlis/put_in_tab.c
 
 void	put_in_tab(char *destination, const char *source);
+
+// utlis/is_bin.c
+
+int		is_bin(char c, enum e_quotetype *quote);
 
 // === NORME ABUSE BE LIKE === //
 typedef struct s__exp {

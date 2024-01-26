@@ -6,11 +6,11 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:45:50 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 09:45:54 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/26 16:35:13 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static
 void	clear_argv(t_command *command)
@@ -44,7 +44,7 @@ int	find_argv_number(char *buffer, int *argv_cursor)
 			result = result + 1;
 			space = 0;
 		}
-		if (*(buffer + cursor++) == ' ')
+		if (*(buffer + cursor++) == ' ' && !quote)
 			space = 1;
 	}
 	return (result);
@@ -98,13 +98,13 @@ void	putargv(char *argv, char *buffer, int *cursor_main)
 	}
 }
 
-void	format_command(char *buffer, t_command *command)
+void	format_command(char *buffer, t_command *command, enum e_quotetype quote)
 {
 	int	cursor;
 	int	argv_cursor;
 
 	cursor = 0;
-	while (*(buffer + cursor) != ' ' && *(buffer + cursor))
+	while (is_bin(*(buffer + cursor), &quote) && *(buffer + cursor))
 	{
 		*(command->bin + cursor) = *(buffer + cursor);
 		cursor++;

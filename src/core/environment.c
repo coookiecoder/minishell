@@ -6,11 +6,11 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:45:41 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 09:45:44 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/26 16:02:11 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	set_env_exists(t_shell *sh, int pos, char *raw);
 int	set_env_new(t_shell *sh, int len, char *raw);

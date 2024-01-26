@@ -6,11 +6,11 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:46:38 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/17 19:08:42 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/26 16:24:37 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 size_t	pipe_counter(char *raw);
 int		execution_parse(t_exec *exe, char *raw);
@@ -71,7 +71,7 @@ int	cmd_parse(t_shell *sh, t_command *cmd)
 		return (free(parsed), g_sig = NORMAL, 1);
 	if (!parsed)
 		return (free(parsed), write(2, ERR_PIPES_FILE, ERR_PIPES_FILE_N), 1);
-	format_command(parsed, cmd);
+	format_command(parsed, cmd, NO_QUOTE);
 	*(cmd->argv) = ft_strdup(cmd->bin);
 	if (!*(cmd->argv))
 		return (free(parsed), \
