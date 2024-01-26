@@ -6,7 +6,7 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:45:02 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 09:45:04 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/26 10:51:27 by flcollar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,9 @@ int	convert_code(t_command *cmd)
 	code = cmd->argv[1];
 	while (is_allowed(*(code + cursor)))
 		cursor++;
+	code_int = -1;
 	if (*(code + cursor) == '\0')
 		code_int = atolli(code);
-	else
-		code_int = -1;
 	if (code_int == -1)
 	{
 		write(1, "bash: exit: ", 13);
@@ -45,5 +44,7 @@ int	convert_code(t_command *cmd)
 		write(1, ": numeric argument required\n", 29);
 		code_int = 2;
 	}
+	else if (cmd->argc > 2)
+		return (write(1, "exit\nbash: exit: too many arguments\n", 37), 300);
 	return (code_int);
 }

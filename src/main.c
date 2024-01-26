@@ -6,7 +6,7 @@
 /*   By: abareux <abareux@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 11:56:35 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/17 19:16:34 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/26 10:44:51 by flcollar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	main(int argc, char **argv, const char **envp)
 			continue ;
 		}
 		add_history(buffer);
-		if (raw_parse(&shell, buffer))
+		if (raw_parse(&shell, buffer) && shell.exit != 300)
 			return (ft_exit(buffer, &shell, NULL), shell.exit);
 		ft_waitpid(&shell);
 		free(buffer);
