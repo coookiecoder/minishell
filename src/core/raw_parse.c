@@ -6,7 +6,7 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:46:38 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/26 16:24:37 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/26 17:11:18 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int	cmd_parse(t_shell *sh, t_command *cmd)
 	parsed = redirection_handler(parsed, cmd);
 	if (g_sig == EXIT)
 		return (free(parsed), g_sig = NORMAL, 1);
+	if (!parsed)
+		sh->exit = 300;
 	if (!parsed)
 		return (free(parsed), write(2, ERR_PIPES_FILE, ERR_PIPES_FILE_N), 1);
 	format_command(parsed, cmd, NO_QUOTE);
