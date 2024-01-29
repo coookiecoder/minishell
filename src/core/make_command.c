@@ -6,11 +6,11 @@
 /*   By: abareux <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 09:46:09 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/12 13:06:49 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/29 18:06:37 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	cmd_exec(t_shell *sh, t_exec *exe)
 {
@@ -24,7 +24,7 @@ int	cmd_exec(t_shell *sh, t_exec *exe)
 	while (i < exe->total)
 	{
 		sh->pids[i] = 0;
-		if (!strncmp(exe->cmds[i]->bin, "exit", 5))
+		if (!ft_strncmp(exe->cmds[i]->bin, "exit", 5))
 		{
 			sh->exit = convert_code(exe->cmds[i]);
 			return (exe->total == 1);
