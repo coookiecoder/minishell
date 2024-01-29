@@ -6,7 +6,7 @@
 /*   By: abareux <abareux@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 12:03:56 by abareux           #+#    #+#             */
-/*   Updated: 2024/01/26 16:21:21 by abareux          ###   ########.fr       */
+/*   Updated: 2024/01/29 17:48:46 by abareux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,16 +186,16 @@ void	signal_breakout(int sig);
 
 char	*redirection_handler(char *raw, t_command *cmd);
 
-// utlis/strncmp.c
+// utils/strncmp.c
 
 int		ft_strncmp(const char *s1, const char *s2, int len);
 
-// utlis/strlen.c
+// utils/strlen.c
 
 int		ft_strlen(const char *str);
 int		ft_strclen(const char *str, const char stop);
 
-// utlis/strdup.c
+// utils/strdup.c
 
 char	*ft_strndup(const char *s, size_t n);
 char	*ft_strdup(const char *s);
@@ -209,12 +209,12 @@ char	*ft_itoa(int n);
 
 char	*ft_strjoin(char *string_a, char *string_b, int mode, size_t n);
 
-// utlis/is_space.c
+// utils/is_space.c
 
 int		ft_is_space(char c);
 int		is_empty(const char *buffer);
 
-// utlis/parse_path.c
+// utils/parse_path.c
 
 char	*parse_path_absolute(char *command);
 char	*parse_path_relative(t_shell *shell, char *command);
@@ -231,11 +231,11 @@ char	*join(t_list *list);
 
 char	**ft_split(char const *s, char c);
 
-// utlis/put_in_tab.c
+// utils/put_in_tab.c
 
 void	put_in_tab(char *destination, const char *source);
 
-// utlis/is_bin.c
+// utils/is_bin.c
 
 int		is_bin(char c, enum e_quotetype *quote);
 
