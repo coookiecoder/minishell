@@ -9,13 +9,13 @@ FILES=main \
 SRC=$(foreach f, $(FILES), src/$(f).c)
 OBJ=$(foreach f, $(FILES), obj/$(f).o)
 
-CCFLAGS=-Isrc -Wall -Wextra -Werror -Wunreachable-code -Wpedantic -g3 -Wunreachable-code-aggressive
-LNFLAGS=$(CCFLAGS) -lreadline -g3 #-fsanitize=address
+CCFLAGS=-Isrc -Wall -Wextra -Werror -g3 -lreadline
+LNFLAGS=$(CCFLAGS)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(LNFLAGS) -o $@ $^
+	$(CC) -o $@ $^ $(LNFLAGS)
 
 obj/%.o: src/%.c
 	@mkdir -p $(dir $@)
