@@ -9,8 +9,8 @@ FILES=main \
 SRC=$(foreach f, $(FILES), src/$(f).c)
 OBJ=$(foreach f, $(FILES), obj/$(f).o)
 
-CCFLAGS=-Isrc -Wall -Wextra -Werror -g3 -lreadline
-LNFLAGS=$(CCFLAGS)
+CCFLAGS=-Isrc -Wall -Wextra -Werror -g3
+LNFLAGS=$(CCFLAGS) -lreadline
 
 all: $(NAME)
 
